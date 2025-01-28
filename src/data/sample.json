@@ -1,0 +1,28 @@
+{
+  "user": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "username": "johndoe",
+    "avatar": "https://picsum.photos/200",
+    "banner": "https://picsum.photos/1600/900",
+    "stats": {
+      "moviesWatched": 142,
+      "following": 234,
+      "followers": 567
+    },
+    "following": [],
+    "followersList": [],
+    "followingList": []
+  },
+  "movies": {
+    "recentlyWatched": [
+      {
+        "id": 1,
+        "title": "Inception",
+        "poster": "https://picsum.photos/120/180"
+      }
+    ],
+    "watchlist": [],
+    "favorites": []
+  }
+}
