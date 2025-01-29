@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../utils/axios";
 
 function Register() {
   const navigate = useNavigate();
@@ -10,9 +11,14 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [username, setUsername] = useState("");
 
   const validateForm = () => {
     const newErrors = {};
+
+    if (!username) {
+      newErrors.username = "Username is required";
+    }
 
     if (!email) {
       newErrors.email = "Email is required";
@@ -42,14 +48,34 @@ function Register() {
     }
 
     setIsLoading(true);
-    // Simulate API call with 2 second delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await axiosClient.post("/auth/sign-up", {
+        username,
+        email,
+        password,
+      });
 
-    // Implement registration logic here
-    console.log("Register pressed", { email, password, confirmPassword });
+      const { token } = response.data;
 
-    setIsLoading(false);
-    navigate("/verify");
+      // Store token and auth status
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+
+      // Redirect to edit profile instead of home
+      navigate("/edit-profile");
+    } catch (error) {
+      const errorData = error.response?.data || {};
+      const newErrors = {};
+
+      // Handle field-specific errors
+      Object.keys(errorData).forEach((key) => {
+        newErrors[key] = errorData[key][0];
+      });
+
+      setErrors(newErrors);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -58,6 +84,24 @@ function Register() {
         <div className="header-container">
           <h1 className="title">Create Account</h1>
           <p className="subtitle">Sign up to get started</p>
+        </div>
+
+        <div className="form-group">
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              if (errors.username) {
+                setErrors((prev) => ({ ...prev, username: "" }));
+              }
+            }}
+            placeholder="Username"
+            className={errors.username ? "error" : ""}
+          />
+          {errors.username && (
+            <span className="error-message">{errors.username}</span>
+          )}
         </div>
 
         <div className="form-group">

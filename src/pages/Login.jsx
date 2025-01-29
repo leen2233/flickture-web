@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../utils/axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -28,18 +29,33 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Set auth status and navigate to home
+    try {
+      const response = await axiosClient.post("/auth/login", {
+        username: email, // Django expects username
+        password: password,
+      });
+
+      const { token } = response.data;
+
+      // Store token and auth status
+      localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
+
       navigate("/home");
-    }, 3000);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.non_field_errors?.[0] ||
+        "Failed to login. Please try again.";
+      setErrors({ ...errors, general: errorMessage });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -97,6 +113,12 @@ function Login() {
             <span className="error-message">{errors.password}</span>
           )}
         </div>
+
+        {errors.general && (
+          <div className="error-message" style={{ textAlign: "center" }}>
+            {errors.general}
+          </div>
+        )}
 
         <button
           className="primary-button"

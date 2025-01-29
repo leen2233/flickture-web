@@ -1,12 +1,10 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
+import EditProfile from "./pages/EditProfile";
 import "./App.css";
 
 // Temporary auth check - replace with actual auth logic
@@ -14,29 +12,21 @@ const isAuthenticated = () => {
   return localStorage.getItem("isAuthenticated") === "true";
 };
 
-function PrivateRoute({ children }) {
-  return isAuthenticated() ? children : <Navigate to="/login" replace />;
-}
-
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/"
-          element={
-            isAuthenticated() ? (
-              <Navigate to="/home" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/search" element={<div>Search Page</div>} />
+          <Route path="/lists" element={<div>Lists Page</div>} />
+        </Route>
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
