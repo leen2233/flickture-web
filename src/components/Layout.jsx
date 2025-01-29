@@ -23,6 +23,14 @@ function LeftSidebar() {
         <NavItem to="/lists" icon={List} label="Lists" />
         <NavItem to="/profile" icon={User} label="Profile" />
       </div>
+      <div className="sidebar-footer">
+        <NavLink to="/about" className="footer-link">
+          About
+        </NavLink>
+        <NavLink to="/privacy" className="footer-link">
+          Privacy Policy
+        </NavLink>
+      </div>
     </div>
   );
 }

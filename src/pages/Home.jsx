@@ -3,9 +3,11 @@ import axiosClient from "../utils/axios";
 
 function Home() {
   return (
-    <div>
-      <h1>Home Page</h1>
-      {/* Add your home page content here */}
+    <div className="content-container">
+      <div className="home-container">
+        <h1>Home Page</h1>
+        {/* Add your home page content here */}
+      </div>
     </div>
   );
 }

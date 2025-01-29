@@ -104,6 +104,15 @@ function Profile() {
               alt="Profile Banner"
               className="banner-image"
             />
+            <div className="profile-cover-actions">
+              <button
+                className="edit-profile"
+                onClick={() => navigate("/edit-profile")}
+              >
+                <Edit2 size={16} />
+                <span>Edit Profile</span>
+              </button>
+            </div>
             <div className="profile-avatar-wrapper">
               <img
                 src={userData.avatar || "/default-avatar.jpg"}
@@ -119,36 +128,24 @@ function Profile() {
               <span className="username">@{userData.username}</span>
               {userData.about && <p className="about-text">{userData.about}</p>}
             </div>
-            <div className="profile-actions">
-              <button
-                className="edit-profile"
-                onClick={() => navigate("/edit-profile")}
-              >
-                <Edit2 size={16} />
-                Edit Profile
-              </button>
-              <button className="icon-only">
-                <Settings size={16} />
-              </button>
-            </div>
-          </div>
 
-          <div className="stats-row">
-            <StatBox
-              label="Movies Watched"
-              value={userData.stats.movies_watched}
-              onClick={() => {}}
-            />
-            <StatBox
-              label="Following"
-              value={userData.stats.following}
-              onClick={() => {}}
-            />
-            <StatBox
-              label="Followers"
-              value={userData.stats.followers}
-              onClick={() => {}}
-            />
+            <div className="stats-row">
+              <StatBox
+                label="Movies Watched"
+                value={userData.stats.movies_watched}
+                onClick={() => {}}
+              />
+              <StatBox
+                label="Following"
+                value={userData.stats.following}
+                onClick={() => {}}
+              />
+              <StatBox
+                label="Followers"
+                value={userData.stats.followers}
+                onClick={() => {}}
+              />
+            </div>
           </div>
         </div>
 
