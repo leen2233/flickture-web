@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Edit2, Settings } from "lucide-react";
+import {
+  Edit2,
+  Settings,
+  Clock,
+  BookMarked,
+  Heart,
+  ChevronRight,
+  Film,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../utils/axios";
 
@@ -12,39 +20,52 @@ function StatBox({ label, value, onClick }) {
   );
 }
 
-function MovieList({ title, movies = [], count = 0, onSeeAll }) {
-  if (!movies.length) return null;
+function EmptyState({ icon: Icon, message }) {
+  return (
+    <div className="empty-state">
+      <Icon size={24} />
+      <p>{message}</p>
+    </div>
+  );
+}
 
+function MovieList({
+  title,
+  movies = [],
+  count = 0,
+  onSeeAll,
+  icon: Icon,
+  emptyMessage,
+}) {
   return (
     <div className="movie-list">
       <div className="movie-list-header">
-        <h2>{title}</h2>
-        <button onClick={onSeeAll} className="see-all-btn">
-          <span>See all {count}</span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
+        <div className="list-title">
+          <Icon size={20} />
+          <h2>{title}</h2>
+        </div>
+        {movies.length > 0 && (
+          <button onClick={onSeeAll} className="see-all-btn">
+            <span>See all {count}</span>
+            <ChevronRight size={16} />
+          </button>
+        )}
       </div>
-      <div className="movies-scroll">
-        {movies.map((movie) => (
-          <div key={movie.id} className="movie-card">
-            <div className="movie-poster">
-              <img src={movie.poster_url} alt={movie.title} />
+
+      {movies.length > 0 ? (
+        <div className="movies-scroll">
+          {movies.map((movie) => (
+            <div key={movie.id} className="movie-card">
+              <div className="movie-poster">
+                <img src={movie.poster_url} alt={movie.title} />
+              </div>
+              <span className="movie-title">{movie.title}</span>
             </div>
-            <span className="movie-title">{movie.title}</span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <EmptyState icon={Film} message={emptyMessage} />
+      )}
     </div>
   );
 }
@@ -155,18 +176,24 @@ function Profile() {
             movies={userData.recently_watched}
             count={userData.recently_watched?.length}
             onSeeAll={() => {}}
+            icon={Clock}
+            emptyMessage="No movies watched yet. Start watching!"
           />
           <MovieList
             title="Want to Watch"
             movies={userData.watchlist}
             count={userData.watchlist?.length}
             onSeeAll={() => {}}
+            icon={BookMarked}
+            emptyMessage="Your watchlist is empty. Start adding movies!"
           />
           <MovieList
             title="Favorites"
             movies={userData.favorites}
             count={userData.favorites?.length}
             onSeeAll={() => {}}
+            icon={Heart}
+            emptyMessage="No favorite movies yet. Mark some movies as favorites!"
           />
         </div>
       </div>
