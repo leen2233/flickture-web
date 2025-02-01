@@ -19,6 +19,7 @@ import {
   Loader2,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
+import MovieDetailSkeleton from "../components/skeletons/MovieDetailSkeleton";
 
 function CollectionSection({ collection, collection_movies }) {
   const navigate = useNavigate();
@@ -63,41 +64,52 @@ function MovieDetail() {
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isInWatchlist, setIsInWatchlist] = useState(false);
-  const [isWatched, setIsWatched] = useState(false);
-  const [isInFavorites, setIsInFavorites] = useState(false);
-  const [watchlistStatus, setWatchlistStatus] = useState(null);
   const [isLoadingWatchlist, setIsLoadingWatchlist] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchMovieDetails = async () => {
       try {
+        setIsLoading(true);
         const response = await axiosClient.get(`/movies/${tmdbId}/detail`);
-        setMovie(response.data);
-        setWatchlistStatus(response.data.watchlist_status);
+        if (isMounted) {
+          setMovie(response.data);
+        }
       } catch (err) {
-        setError("Failed to load movie details");
+        if (isMounted) {
+          setError("Failed to load movie details");
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchMovieDetails();
+
+    // Cleanup function to prevent state updates if component unmounts
+    return () => {
+      isMounted = false;
+    };
   }, [tmdbId]);
 
   const handleWatchlistToggle = async () => {
+    if (isLoadingWatchlist) return;
+
     try {
       setIsLoadingWatchlist(true);
-
-      if (!watchlistStatus) {
+      if (!movie.watchlist_status) {
         await axiosClient.post("/movies/watchlist/", {
           tmdb_id: tmdbId,
           status: "watchlist",
         });
-        setWatchlistStatus("watchlist");
+        setMovie((prev) => ({ ...prev, watchlist_status: "watchlist" }));
       } else {
         await axiosClient.delete(`/movies/watchlist/${tmdbId}/`);
-        setWatchlistStatus(null);
+        setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
       console.error("Failed to update watchlist:", error);
@@ -107,18 +119,19 @@ function MovieDetail() {
   };
 
   const handleWatchedToggle = async () => {
+    if (isLoadingWatchlist) return;
+
     try {
       setIsLoadingWatchlist(true);
-
-      if (watchlistStatus !== "watched") {
+      if (movie.watchlist_status !== "watched") {
         await axiosClient.post("/movies/watchlist/", {
           tmdb_id: tmdbId,
           status: "watched",
         });
-        setWatchlistStatus("watched");
+        setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));
       } else {
         await axiosClient.delete(`/movies/watchlist/${tmdbId}/`);
-        setWatchlistStatus(null);
+        setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
       console.error("Failed to update watched status:", error);
@@ -127,8 +140,25 @@ function MovieDetail() {
     }
   };
 
-  const handleFavoriteToggle = () => {
-    setIsInFavorites(!isInFavorites);
+  const handleFavoriteToggle = async () => {
+    if (isLoadingFavorite) return;
+
+    try {
+      setIsLoadingFavorite(true);
+      if (!movie.is_favorite) {
+        await axiosClient.post("/movies/favorites/", {
+          tmdb_id: tmdbId,
+        });
+        setMovie((prev) => ({ ...prev, is_favorite: true }));
+      } else {
+        await axiosClient.delete(`/movies/favorites/${tmdbId}/`);
+        setMovie((prev) => ({ ...prev, is_favorite: false }));
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+    } finally {
+      setIsLoadingFavorite(false);
+    }
   };
 
   const handleShare = () => {
@@ -165,14 +195,7 @@ function MovieDetail() {
   };
 
   if (isLoading) {
-    return (
-      <div className="content-container">
-        <div className="loading-state">
-          <div className="loader"></div>
-          <p>Loading movie details...</p>
-        </div>
-      </div>
-    );
+    return <MovieDetailSkeleton />;
   }
 
   if (error) {
@@ -285,19 +308,18 @@ function MovieDetail() {
               </span>
             </div>
             <div className="metadata-item">
-              <MessageCircle size={20} className="metadata-icon" />
-              <span className="metadata-label">Comments</span>
-              <span className="metadata-value">
-                {Math.floor(Math.random() * 100)}
-              </span>
+              <MessageCircle size={16} />
+              <Link to={`/movie/${tmdbId}/comments`} className="metadata-link">
+                {movie.comments_count || 0} Comments
+              </Link>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="action-buttons">
             <div className="action-row">
-              {watchlistStatus !== "watched" ? (
-                watchlistStatus !== "watchlist" ? (
+              {movie.watchlist_status !== "watched" ? (
+                movie.watchlist_status !== "watchlist" ? (
                   <button
                     className="action-button"
                     onClick={handleWatchlistToggle}
@@ -342,12 +364,20 @@ function MovieDetail() {
 
             <div className="action-row">
               <button
-                className={`action-button ${isInFavorites ? "active" : ""}`}
+                className={`action-button ${movie.is_favorite ? "active" : ""}`}
                 onClick={handleFavoriteToggle}
+                disabled={isLoadingFavorite}
               >
-                <Heart size={20} fill={isInFavorites ? "white" : "none"} />
+                {isLoadingFavorite ? (
+                  <Loader2 size={20} className="spin" />
+                ) : (
+                  <Heart
+                    size={20}
+                    fill={movie.is_favorite ? "white" : "none"}
+                  />
+                )}
                 <span>
-                  {isInFavorites ? "In Favorites" : "Add to Favorites"}
+                  {movie.is_favorite ? "In Favorites" : "Add to Favorites"}
                 </span>
               </button>
               <button className="action-button">
@@ -356,7 +386,7 @@ function MovieDetail() {
               </button>
             </div>
 
-            {watchlistStatus === "watchlist" && (
+            {movie.watchlist_status === "watchlist" && (
               <button
                 className="action-button danger"
                 onClick={handleWatchlistToggle}

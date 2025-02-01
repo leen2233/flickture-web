@@ -10,6 +10,7 @@ import Privacy from "./pages/Privacy";
 import Search from "./pages/Search";
 import MovieDetail from "./pages/MovieDetail";
 import MovieListPage from "./pages/MovieListPage";
+import Comments from "./pages/Comments";
 import "./App.css";
 
 // Temporary auth check - replace with actual auth logic
@@ -32,7 +33,8 @@ function App() {
           <Route path="/lists" element={<div>Lists Page</div>} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/movies" element={<MovieListPage />} />
+          <Route path="/movies/:type" element={<MovieListPage />} />
+          <Route path="/movie/:movieId/comments" element={<Comments />} />
         </Route>
       </Routes>
     </BrowserRouter>

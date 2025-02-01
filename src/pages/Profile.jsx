@@ -8,9 +8,10 @@ import {
   ChevronRight,
   Film,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import { formatDistanceToNow } from "date-fns";
+import MovieStatsModal from "../components/MovieStatsModal";
 
 function StatBox({ label, value, onClick }) {
   return (
@@ -64,46 +65,43 @@ function MovieList({
   title,
   movies = [],
   count = 0,
-  onSeeAll,
+  type,
   icon: Icon,
   emptyMessage,
 }) {
-  const navigate = useNavigate();
-
-  const handleSeeAll = () => {
-    navigate("/movies", {
-      state: {
-        title,
-        type: title.toLowerCase().replace(/\s+/g, "_"),
-        movies,
-      },
-    });
-  };
+  if (!movies?.length) {
+    return (
+      <div className="movie-list-section">
+        <div className="list-header">
+          <h2>
+            <Icon size={20} className="icon" />
+            {title}
+          </h2>
+        </div>
+        <EmptyState icon={Film} message={emptyMessage} />
+      </div>
+    );
+  }
 
   return (
-    <div className="movie-list">
-      <div className="movie-list-header">
-        <div className="list-title">
-          <Icon size={20} />
-          <h2>{title}</h2>
-        </div>
-        {movies.length > 0 && (
-          <button onClick={handleSeeAll} className="see-all-btn">
+    <div className="movie-list-section">
+      <div className="list-header">
+        <h2>
+          <Icon size={20} className="icon" />
+          {title}
+        </h2>
+        {count > 5 && (
+          <Link to={`/movies/${type}`} className="see-all">
             <span>See all {count}</span>
             <ChevronRight size={16} />
-          </button>
+          </Link>
         )}
       </div>
-
-      {movies.length > 0 ? (
-        <div className="movies-scroll">
-          {movies.map((item) => (
-            <MovieCard key={item.movie.id} item={item} />
-          ))}
-        </div>
-      ) : (
-        <EmptyState icon={Film} message={emptyMessage} />
-      )}
+      <div className="movies-grid">
+        {movies.slice(0, 5).map((item) => (
+          <MovieCard key={item.movie.tmdb_id} item={item} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -113,6 +111,9 @@ function Profile() {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showWatchedModal, setShowWatchedModal] = useState(false);
+  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [isLoadingWatched, setIsLoadingWatched] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -128,6 +129,19 @@ function Profile() {
 
     fetchProfile();
   }, []);
+
+  const handleWatchedClick = async () => {
+    setIsLoadingWatched(true);
+    try {
+      const response = await axiosClient.get("/movies/lists/recently_watched");
+      setWatchedMovies(response.data);
+      setShowWatchedModal(true);
+    } catch (error) {
+      console.error("Failed to fetch watched movies:", error);
+    } finally {
+      setIsLoadingWatched(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -192,7 +206,7 @@ function Profile() {
               <StatBox
                 label="Movies Watched"
                 value={userData.stats.movies_watched}
-                onClick={() => {}}
+                onClick={handleWatchedClick}
               />
               <StatBox
                 label="Following"
@@ -212,8 +226,8 @@ function Profile() {
           <MovieList
             title="Recently Watched"
             movies={userData.recently_watched}
-            count={userData.recently_watched?.length}
-            onSeeAll={() => {}}
+            count={userData.stats.movies_watched}
+            type="recently-watched"
             icon={Clock}
             emptyMessage="No movies watched yet. Start watching!"
           />
@@ -221,7 +235,7 @@ function Profile() {
             title="Want to Watch"
             movies={userData.watchlist}
             count={userData.watchlist?.length}
-            onSeeAll={() => {}}
+            type="want-to-watch"
             icon={BookMarked}
             emptyMessage="Your watchlist is empty. Start adding movies!"
           />
@@ -229,12 +243,20 @@ function Profile() {
             title="Favorites"
             movies={userData.favorites}
             count={userData.favorites?.length}
-            onSeeAll={() => {}}
+            type="favorites"
             icon={Heart}
             emptyMessage="No favorite movies yet. Mark some movies as favorites!"
           />
         </div>
       </div>
+
+      {showWatchedModal && (
+        <MovieStatsModal
+          title="Movies Watched"
+          type="recently-watched"
+          onClose={() => setShowWatchedModal(false)}
+        />
+      )}
     </div>
   );
 }

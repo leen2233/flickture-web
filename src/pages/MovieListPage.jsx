@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Search,
   Star,
@@ -20,7 +20,21 @@ import SearchInput from "../components/SearchInput";
 function MovieListPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { title, type } = location.state || {};
+  const { type } = useParams();
+  let title;
+  switch (type) {
+    case "recently-watched":
+      title = "Recently Watched";
+      break;
+    case "want-to-watch":
+      title = "Want to Watch";
+      break;
+    case "favorites":
+      title = "Favorites";
+      break;
+    default:
+      title = type.replace(/-/g, " ");
+  }
 
   const [watchlistItems, setWatchlistItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +45,7 @@ function MovieListPage() {
     const fetchMovies = async () => {
       try {
         const response = await axiosClient.get(`/movies/lists/${type}`);
-        setWatchlistItems(response.data);
+        setWatchlistItems(response.data.results);
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 import "../styles/MovieList.css";
 
 function MovieList({ title, movies, icon: Icon, showStatus, onMovieClick }) {
@@ -35,9 +35,9 @@ function MovieList({ title, movies, icon: Icon, showStatus, onMovieClick }) {
                   src={movie.poster_preview_url || "/default-movie.jpg"}
                   alt={movie.title}
                 />
-                {showStatus && movie.status && (
-                  <div className={`movie-status ${movie.status}`}>
-                    {movie.status}
+                {movie.is_favorite && (
+                  <div className="movie-status favorite">
+                    <Heart size={20} fill="var(--primary-color)" />
                   </div>
                 )}
               </div>

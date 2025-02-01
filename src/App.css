@@ -1892,60 +1892,6 @@ input.error {
   color: var(--primary-color);
 }
 
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.5rem;
-}
-
-.movie-grid-item {
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.movie-grid-item:hover {
-  transform: translateY(-4px);
-}
-
-.movie-info-compact {
-  margin-top: 0.75rem;
-}
-
-.movie-info-compact h3 {
-  font-size: 0.875rem;
-  margin: 0;
-  font-weight: 500;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.movie-info-compact .movie-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-@media (max-width: 768px) {
-  .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-  }
-
-  .movie-info-compact h3 {
-    font-size: 0.8125rem;
-  }
-
-  .movie-info-compact .movie-meta {
-    font-size: 0.6875rem;
-  }
-}
-
 /* Movie Detail Navigation */
 .movie-nav {
   position: absolute;
@@ -2021,4 +1967,118 @@ input.error {
   .nav-button span {
     font-size: 0.75rem;
   }
+}
+
+/* Update movie card styles in profile */
+.profile-content-lists .movie-card {
+  width: calc(20% - 1rem); /* 5 cards per row with gap */
+  min-width: 180px;
+  margin-bottom: 1rem;
+}
+
+.profile-content-lists .movies-grid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.profile-content-lists .movies-grid::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.profile-content-lists .movie-poster {
+  aspect-ratio: 2/3;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-content-lists .movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-content-lists .movie-details {
+  padding: 0.75rem 0.5rem;
+}
+
+.profile-content-lists .movie-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-content-lists .movie-updated {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* List header styles */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.list-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.list-header .icon {
+  color: var(--primary-color);
+}
+
+.list-header .see-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.list-header .see-all:hover {
+  color: var(--primary-color);
+}
+
+/* Mobile responsive */
+@media (max-width: 1200px) {
+  .profile-content-lists .movie-card {
+    width: calc(25% - 1rem); /* 4 cards per row */
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content-lists .movie-card {
+    min-width: 140px;
+  }
+}
+
+.metadata-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.metadata-link:hover {
+  color: #dc3f72;
 }
