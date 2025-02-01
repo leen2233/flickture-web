@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import axiosClient from "../utils/axios";
@@ -18,6 +18,9 @@ function EditProfile() {
     avatar: null,
     banner_image: null,
   });
+
+  const bannerInputRef = useRef(null);
+  const avatarInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -96,6 +99,10 @@ function EditProfile() {
     }
   };
 
+  const handleImageClick = (inputRef) => {
+    inputRef.current.click();
+  };
+
   if (isLoading) {
     return (
       <div className="content-container">
@@ -127,12 +134,15 @@ function EditProfile() {
                     ? "none"
                     : "1px dashed var(--border-color)",
                 }}
+                onClick={() => handleImageClick(bannerInputRef)}
               >
                 <input
+                  ref={bannerInputRef}
                   type="file"
                   name="banner_image"
                   onChange={handleFileChange}
                   accept="image/*"
+                  style={{ display: "none" }}
                 />
                 <div className="upload-overlay">
                   <span>
@@ -153,12 +163,15 @@ function EditProfile() {
                     ? "none"
                     : "1px dashed var(--border-color)",
                 }}
+                onClick={() => handleImageClick(avatarInputRef)}
               >
                 <input
+                  ref={avatarInputRef}
                   type="file"
                   name="avatar"
                   onChange={handleFileChange}
                   accept="image/*"
+                  style={{ display: "none" }}
                 />
                 <div className="upload-overlay">
                   <span>{preview.avatar ? "Change" : "Upload"}</span>

@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Search from "./pages/Search";
 import MovieDetail from "./pages/MovieDetail";
+import MovieListPage from "./pages/MovieListPage";
 import "./App.css";
 
 // Temporary auth check - replace with actual auth logic
@@ -27,10 +28,11 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/movies/:tmdbId" element={<MovieDetail />} />
+          <Route path="/movie/:tmdbId" element={<MovieDetail />} />
           <Route path="/lists" element={<div>Lists Page</div>} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/movies" element={<MovieListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

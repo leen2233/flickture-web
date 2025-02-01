@@ -10,15 +10,19 @@ import {
   Clock,
   Trophy,
 } from "lucide-react";
+import MovieList from "../components/MovieList";
 import axiosClient from "../utils/axios";
+import "../styles/Search.css";
+import SearchInput from "../components/SearchInput";
 
 function MovieCard({ movie }) {
   const [searchParams] = useSearchParams();
 
   return (
     <Link
-      to={`/movies/${movie.tmdb_id}`}
+      to={`/movie/${movie.tmdb_id}`}
       state={{
+        from: "search",
         search: searchParams.toString() ? `?${searchParams.toString()}` : "",
       }}
       className="search-movie-card"
@@ -58,45 +62,6 @@ function MovieCard({ movie }) {
         <p className="overview">{movie.plot}</p>
       </div>
     </Link>
-  );
-}
-
-function MovieList({ title, movies, icon: Icon }) {
-  return (
-    <div className="movie-list-section">
-      <div className="list-header">
-        <Icon size={20} />
-        <h2>{title}</h2>
-      </div>
-      <div className="movies-grid">
-        {movies.map((movie) => (
-          <Link
-            key={movie.tmdb_id}
-            to={`/movies/${movie.tmdb_id}`}
-            className="movie-grid-item"
-          >
-            <div className="movie-poster">
-              <img
-                src={movie.poster_preview_url || "/default-movie.jpg"}
-                alt={movie.title}
-              />
-            </div>
-            <div className="movie-info-compact">
-              <h3>{movie.title}</h3>
-              <div className="movie-meta">
-                {movie.rating && (
-                  <span className="rating">
-                    <Star size={14} className="star-icon" />
-                    {movie.rating.toFixed(1)}
-                  </span>
-                )}
-                {movie.year && <span className="year">({movie.year})</span>}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -180,21 +145,13 @@ function Search() {
   return (
     <div className="content-container">
       <div className="search-container">
-        <form onSubmit={handleSearch} className="search-form">
-          <div className="search-input-wrapper">
-            <SearchIcon size={20} />
-            <input
-              type="text"
-              value={query}
-              onChange={handleInputChange}
-              placeholder="Search for movies..."
-              className="search-input"
-            />
-          </div>
-          <button type="submit" className="search-button" disabled={isLoading}>
-            {isLoading ? <Loader className="spin" size={20} /> : "Search"}
-          </button>
-        </form>
+        <SearchInput
+          value={query}
+          onChange={handleInputChange}
+          onSubmit={handleSearch}
+          placeholder="Search for movies..."
+          isLoading={isLoading}
+        />
 
         {error && <div className="error-message general">{error}</div>}
 

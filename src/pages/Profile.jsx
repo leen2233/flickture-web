@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../utils/axios";
+import { formatDistanceToNow } from "date-fns";
 
 function StatBox({ label, value, onClick }) {
   return (
@@ -29,6 +30,36 @@ function EmptyState({ icon: Icon, message }) {
   );
 }
 
+function MovieCard({ item }) {
+  const { movie, updated_at } = item;
+  const navigate = useNavigate();
+
+  return (
+    <div
+      className="movie-card"
+      onClick={() =>
+        navigate(`/movie/${movie.tmdb_id}`, {
+          state: { from: "profile" },
+        })
+      }
+    >
+      <div className="movie-poster">
+        <img src={movie.poster_url} alt={movie.title} />
+        <div className="movie-info-overlay">
+          <div className="movie-rating">★ {movie.rating.toFixed(1)}</div>
+          <div className="movie-year">{movie.year}</div>
+        </div>
+      </div>
+      <div className="movie-details">
+        <h3 className="movie-title">{movie.title}</h3>
+        <span className="movie-updated">
+          {formatDistanceToNow(new Date(updated_at))} ago
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function MovieList({
   title,
   movies = [],
@@ -37,6 +68,18 @@ function MovieList({
   icon: Icon,
   emptyMessage,
 }) {
+  const navigate = useNavigate();
+
+  const handleSeeAll = () => {
+    navigate("/movies", {
+      state: {
+        title,
+        type: title.toLowerCase().replace(/\s+/g, "_"),
+        movies,
+      },
+    });
+  };
+
   return (
     <div className="movie-list">
       <div className="movie-list-header">
@@ -45,7 +88,7 @@ function MovieList({
           <h2>{title}</h2>
         </div>
         {movies.length > 0 && (
-          <button onClick={onSeeAll} className="see-all-btn">
+          <button onClick={handleSeeAll} className="see-all-btn">
             <span>See all {count}</span>
             <ChevronRight size={16} />
           </button>
@@ -54,13 +97,8 @@ function MovieList({
 
       {movies.length > 0 ? (
         <div className="movies-scroll">
-          {movies.map((movie) => (
-            <div key={movie.id} className="movie-card">
-              <div className="movie-poster">
-                <img src={movie.poster_url} alt={movie.title} />
-              </div>
-              <span className="movie-title">{movie.title}</span>
-            </div>
+          {movies.map((item) => (
+            <MovieCard key={item.movie.id} item={item} />
           ))}
         </div>
       ) : (

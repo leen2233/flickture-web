@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Star,
@@ -20,9 +20,46 @@ import {
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 
+function CollectionSection({ collection, collection_movies }) {
+  const navigate = useNavigate();
+
+  if (!collection || !collection_movies) return null;
+
+  return (
+    <div className="collection-section">
+      <div className="collection-header">
+        <h2>Part of: {collection.name}</h2>
+        <Link to={`/collection/${collection.tmdb_id}`} className="see-all">
+          <span>See collection</span>
+          <ChevronRight size={16} />
+        </Link>
+      </div>
+      <div className="collection-movies">
+        {collection_movies?.map((movie) => (
+          <Link
+            key={movie.tmdb_id}
+            to={`/movie/${movie.tmdb_id}`}
+            className="collection-movie"
+          >
+            <div className="collection-movie-poster">
+              <img
+                src={movie.poster_preview_url || "/default-movie.jpg"}
+                alt={movie.title}
+              />
+            </div>
+            <p className="collection-movie-title">{movie.title}</p>
+            <p className="collection-movie-year">{movie.year}</p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function MovieDetail() {
   const { tmdbId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,6 +141,29 @@ function MovieDetail() {
     }
   };
 
+  // Get back button text based on source
+  const getBackButtonText = () => {
+    switch (location.state?.from) {
+      case "search":
+        return "Back to Search";
+      case "profile":
+        return "Back to Profile";
+      default:
+        return "Back";
+    }
+  };
+
+  // Handle back navigation
+  const handleBack = () => {
+    if (location.state?.from === "search" && location.state?.search) {
+      navigate(`/search${location.state.search}`);
+    } else if (location.state?.from === "profile") {
+      navigate("/profile");
+    } else {
+      navigate(-1);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="content-container">
@@ -134,13 +194,10 @@ function MovieDetail() {
       >
         <div className="backdrop-overlay"></div>
         <div className="movie-nav">
-          <Link
-            to={`/search${location.state?.search || ""}`}
-            className="nav-button"
-          >
+          <button className="nav-button" onClick={handleBack}>
             <ArrowLeft size={20} />
-            <span>Back to Search</span>
-          </Link>
+            <span>{getBackButtonText()}</span>
+          </button>
           <button className="nav-button" onClick={handleShare}>
             <Share2 size={20} />
             <span>Share</span>
@@ -348,45 +405,11 @@ function MovieDetail() {
           )}
 
           {/* Collection Section */}
-          {movie.belongs_to_collection && (
-            <div className="collection-section">
-              <div className="collection-header">
-                <h2 className="collection-title">
-                  Part of: {movie.belongs_to_collection.name}
-                </h2>
-                <Link
-                  to={`/collection/${movie.belongs_to_collection.id}`}
-                  className="see-all"
-                >
-                  <span>See collection</span>
-                  <ChevronRight size={16} />
-                </Link>
-              </div>
-              <div className="collection-movies">
-                {movie.collection_movies?.slice(0, 4).map((collectionMovie) => (
-                  <Link
-                    key={collectionMovie.id}
-                    to={`/movie/${collectionMovie.id}`}
-                    className="collection-movie"
-                  >
-                    <div className="collection-movie-poster">
-                      <img
-                        src={
-                          collectionMovie.poster_path || "/default-movie.jpg"
-                        }
-                        alt={collectionMovie.title}
-                      />
-                    </div>
-                    <p className="collection-movie-title">
-                      {collectionMovie.title}
-                    </p>
-                    <p className="collection-movie-year">
-                      {collectionMovie.release_date?.split("-")[0]}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </div>
+          {movie.collection && (
+            <CollectionSection
+              collection={movie.collection}
+              collection_movies={movie.collection_movies}
+            />
           )}
 
           {/* Lists Section */}
