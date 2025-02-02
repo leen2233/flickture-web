@@ -49,10 +49,11 @@ function Register() {
 
     setIsLoading(true);
     try {
-      const response = await axiosClient.post("/auth/sign-up", {
+      const response = await axiosClient.post("/auth/register/", {
         username,
         email,
         password,
+        full_name: username,
       });
 
       const { token } = response.data;

@@ -124,13 +124,13 @@ function MovieDetail() {
     try {
       setIsLoadingWatchlist(true);
       if (movie.watchlist_status !== "watched") {
-        await axiosClient.post("/movies/watchlist/", {
+        await axiosClient.post("/watchlist/", {
           tmdb_id: tmdbId,
           status: "watched",
         });
         setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));
       } else {
-        await axiosClient.delete(`/movies/watchlist/${tmdbId}/`);
+        await axiosClient.delete(`/watchlist/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
@@ -146,12 +146,12 @@ function MovieDetail() {
     try {
       setIsLoadingFavorite(true);
       if (!movie.is_favorite) {
-        await axiosClient.post("/movies/favorites/", {
+        await axiosClient.post("/favorites/", {
           tmdb_id: tmdbId,
         });
         setMovie((prev) => ({ ...prev, is_favorite: true }));
       } else {
-        await axiosClient.delete(`/movies/favorites/${tmdbId}/`);
+        await axiosClient.delete(`/favorites/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, is_favorite: false }));
       }
     } catch (error) {

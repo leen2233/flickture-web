@@ -80,7 +80,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.watchlist_status) {
-        await axiosClient.post("/movies/watchlist/", {
+        await axiosClient.post("/watchlist/", {
           tmdb_id: movie.tmdb_id,
           status: "watchlist",
         });
@@ -92,7 +92,7 @@ function MovieStatsModal({ title, type, onClose }) {
           )
         );
       } else {
-        await axiosClient.delete(`/movies/watchlist/${movie.tmdb_id}/`);
+        await axiosClient.delete(`/watchlist/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id
@@ -129,7 +129,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.is_favorite) {
-        await axiosClient.post("/movies/favorites/", {
+        await axiosClient.post("/favorites/", {
           tmdb_id: movie.tmdb_id,
         });
         setMovies((prev) =>
@@ -140,7 +140,7 @@ function MovieStatsModal({ title, type, onClose }) {
           )
         );
       } else {
-        await axiosClient.delete(`/movies/favorites/${movie.tmdb_id}/`);
+        await axiosClient.delete(`/favorites/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id

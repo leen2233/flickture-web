@@ -1,0 +1,160 @@
+# Flickture Web Project Rules
+
+# This file defines coding standards and best practices for the Flickture web application
+
+# Project Structure
+
+structure:
+src/:
+components/: "Reusable React components"
+pages/: "Page-level React components"
+utils/: "Utility functions and helpers"
+styles/: "CSS and style-related files"
+assets/: "Static assets like images"
+
+# Code Style Rules
+
+style:
+
+# JavaScript/JSX
+
+- Use functional components with hooks instead of class components
+- Follow ES6+ conventions
+- Use const for variables that won't be reassigned
+- Use let for variables that will be reassigned
+- Avoid var
+- Use arrow functions for consistency
+- Use template literals instead of string concatenation
+- Use destructuring for props and state
+- Use optional chaining (?.) for nested object access
+- Use axiosClient for API calls
+
+# Naming Conventions
+
+naming:
+components: - PascalCase for component files and names (e.g., MovieCard.jsx) - Use .jsx extension for React components
+functions: - camelCase for function names - Use descriptive, action-based names (e.g., handleSubmit, fetchMovieData)
+variables: - camelCase for variable names - Use meaningful, descriptive names
+css: - Use kebab-case for CSS class names - Use BEM naming convention for complex components
+
+# Component Guidelines
+
+components:
+
+- Keep components focused and single-responsibility
+- Extract reusable logic into custom hooks
+- Limit component size to 250 lines (excluding comments)
+- Use prop-types or TypeScript for props validation
+- Implement error boundaries for critical components
+- Use React.memo() for performance optimization when needed
+
+# State Management
+
+state:
+
+- Use useState for local component state
+- Use useContext for global state when needed
+- Avoid prop drilling - use context or state management
+- Keep state as close as possible to where it's used
+
+# Performance
+
+performance:
+
+- Lazy load routes and heavy components
+- Use proper key props in lists
+- Optimize images and assets
+- Use useMemo and useCallback appropriately
+- Implement proper loading states
+- Use code splitting for large bundles
+
+# Testing
+
+testing:
+
+- Write unit tests for utility functions
+- Write integration tests for critical user flows
+- Test error states and edge cases
+- Use meaningful test descriptions
+- Follow AAA pattern (Arrange, Act, Assert)
+
+# API Integration
+
+api:
+
+- Use axiosClient for API calls
+- Implement proper error handling
+- Use environment variables for API endpoints
+- Cache API responses when appropriate
+- Implement retry logic for failed requests
+
+# CSS/Styling
+
+styling:
+
+- Use CSS modules or styled-components
+- Follow mobile-first approach
+- Maintain consistent spacing units
+- Use CSS variables for theming
+- Keep specificity low
+- Avoid !important
+
+# Documentation
+
+documentation:
+
+- Document complex logic with comments
+- Use JSDoc for function documentation
+- Keep README.md up to date
+- Document environment setup
+- Include usage examples for reusable components
+
+# Git Workflow
+
+git:
+
+- Write meaningful commit messages
+- Use feature branches
+- Keep commits atomic and focused
+- Review code before committing
+- Update dependencies regularly
+
+# Accessibility
+
+accessibility:
+
+- Use semantic HTML elements
+- Implement proper ARIA attributes
+- Ensure keyboard navigation
+- Maintain sufficient color contrast
+- Provide alt text for images
+
+# Security
+
+security:
+
+- Sanitize user inputs
+- Implement proper authentication flows
+- Use HTTPS for API calls
+- Don't expose sensitive information
+- Keep dependencies updated
+
+# Error Handling
+
+error_handling:
+
+- Implement global error boundary
+- Log errors appropriately
+- Show user-friendly error messages
+- Handle network errors gracefully
+- Implement fallback UI for errors
+
+# Code Review
+
+code_review:
+
+- Review for security vulnerabilities
+- Check for performance implications
+- Ensure code meets style guidelines
+- Verify error handling
+- Test on different browsers
