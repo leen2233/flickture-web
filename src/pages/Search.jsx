@@ -84,13 +84,13 @@ function Search() {
       try {
         // Fetch popular, now playing, and top rated movies
         const [popularRes, nowPlayingRes, topRatedRes] = await Promise.all([
-          axiosClient.get("/movies/discover/", {
+          axiosClient.get("/movies/discover", {
             params: { category: "popular" },
           }),
-          axiosClient.get("/movies/discover/", {
+          axiosClient.get("/movies/discover", {
             params: { category: "now_playing" },
           }),
-          axiosClient.get("/movies/discover/", {
+          axiosClient.get("/movies/discover", {
             params: { category: "top_rated" },
           }),
         ]);
@@ -127,7 +127,7 @@ function Search() {
     setSearchPerformed(true);
 
     try {
-      const response = await axiosClient.get("/movies/search/widely/", {
+      const response = await axiosClient.get("/movies/search/widely", {
         params: { query: searchQuery.trim() },
       });
       setMovies(response.data.results || []);

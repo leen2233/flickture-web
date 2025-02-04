@@ -73,10 +73,8 @@ function MovieList({
     return (
       <div className="movie-list-section">
         <div className="list-header">
-          <h2>
-            <Icon size={20} className="icon" />
-            {title}
-          </h2>
+          <Icon size={20} className="icon" />
+          <h2>{title}</h2>
         </div>
         <EmptyState icon={Film} message={emptyMessage} />
       </div>
@@ -86,10 +84,8 @@ function MovieList({
   return (
     <div className="movie-list-section">
       <div className="list-header">
-        <h2>
-          <Icon size={20} className="icon" />
-          {title}
-        </h2>
+        <Icon size={20} className="icon" />
+        <h2>{title}</h2>
         {count > 5 && (
           <Link to={`/movies/${type}`} className="see-all">
             <span>See all {count}</span>

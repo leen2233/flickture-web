@@ -80,7 +80,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.watchlist_status) {
-        await axiosClient.post("/watchlist/", {
+        await axiosClient.post("/watchlist", {
           tmdb_id: movie.tmdb_id,
           status: "watchlist",
         });
@@ -109,7 +109,7 @@ function MovieStatsModal({ title, type, onClose }) {
   const handleWatchedToggle = async (e, movie) => {
     e.stopPropagation();
     try {
-      await axiosClient.post("/movies/watchlist/", {
+      await axiosClient.post("/movies/watchlist", {
         tmdb_id: movie.tmdb_id,
         status: "watched",
       });
@@ -129,7 +129,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.is_favorite) {
-        await axiosClient.post("/favorites/", {
+        await axiosClient.post("/favorites", {
           tmdb_id: movie.tmdb_id,
         });
         setMovies((prev) =>

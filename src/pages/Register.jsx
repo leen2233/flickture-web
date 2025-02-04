@@ -49,7 +49,7 @@ function Register() {
 
     setIsLoading(true);
     try {
-      const response = await axiosClient.post("/auth/register/", {
+      const response = await axiosClient.post("/auth/register", {
         username,
         email,
         password,

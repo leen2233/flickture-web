@@ -13,6 +13,7 @@ import {
   Send,
   Filter,
   PenSquare,
+  Trash,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 import "../styles/Comments.css";
@@ -41,10 +42,12 @@ const CommentItem = ({
   content,
   date,
   responses = [],
-  likes: initialLikes = 0,
+  likes_count: initialLikes = 0,
   is_liked: initialIsLiked = false,
+  is_owner,
   movieId,
   movie,
+  onDelete,
 }) => {
   const [showResponses, setShowResponses] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -57,7 +60,9 @@ const CommentItem = ({
 
   const handleLike = async () => {
     try {
-      const response = await axiosClient.post(`/comments/${id}/like/`);
+      const response = await axiosClient.post(
+        `/movies/${movieId}/comments/${id}/like/`
+      );
       setIsLiked(response.data.liked);
       setLikes(response.data.likes_count);
     } catch (error) {
@@ -216,7 +221,13 @@ const CommentItem = ({
 
         <p className="content">{content}</p>
 
-        <div className="comment-actions">
+        <div
+          className={
+            !showResponseInput
+              ? "comment-actions"
+              : "comment-actions input-opened"
+          }
+        >
           <button
             className={`write-response-button ${
               showResponseInput ? "active" : ""
@@ -226,7 +237,12 @@ const CommentItem = ({
             <MessageCircle size={18} />
             <span>{showResponseInput ? "Cancel" : "Write Response"}</span>
           </button>
-
+          {is_owner && (
+            <button className="delete-button" onClick={() => onDelete(id)}>
+              <Trash size={18} />
+              <span>Delete</span>
+            </button>
+          )}
           {responses.length > 0 && (
             <button
               className="responses-toggle"
@@ -344,7 +360,7 @@ function Comments() {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await axiosClient.get(`/movies/${movieId}/detail`);
+        const response = await axiosClient.get(`/movies/${movieId}`);
         setMovie(response.data);
       } catch (error) {
         console.error("Failed to fetch movie:", error);
@@ -353,6 +369,15 @@ function Comments() {
 
     fetchMovie();
   }, [movieId]);
+
+  const handleDeleteComment = async (id) => {
+    try {
+      await axiosClient.delete(`/movies/${movieId}/comments/${id}/`);
+      setComments((prev) => prev.filter((comment) => comment.id !== id));
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -467,6 +492,15 @@ function Comments() {
         )}
 
         <div className="comments-list">
+          {comments.length === 0 && !isLoading && (
+            <div className="no-comments">
+              <MessageCircle size={24} />
+              <span>
+                No comments yet - be the first to share your thoughts!
+              </span>
+            </div>
+          )}
+
           {comments.map((comment, index) => (
             <CommentItem
               key={comment.id}
@@ -474,6 +508,7 @@ function Comments() {
               movieId={movieId}
               movie={movie}
               ref={index === comments.length - 1 ? observer.current : null}
+              onDelete={handleDeleteComment}
             />
           ))}
 

@@ -73,13 +73,18 @@ function MovieDetail() {
     const fetchMovieDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosClient.get(`/movies/${tmdbId}/detail`);
+        setError(null);
+        const response = await axiosClient.get(`/movies/${tmdbId}`);
         if (isMounted) {
           setMovie(response.data);
         }
       } catch (err) {
         if (isMounted) {
-          setError("Failed to load movie details");
+          const errorMessage =
+            err.response?.data?.message ||
+            "Failed to load movie details. Please try again later.";
+          setError(errorMessage);
+          console.error("Movie detail error:", err);
         }
       } finally {
         if (isMounted) {
@@ -90,7 +95,6 @@ function MovieDetail() {
 
     fetchMovieDetails();
 
-    // Cleanup function to prevent state updates if component unmounts
     return () => {
       isMounted = false;
     };
@@ -101,8 +105,10 @@ function MovieDetail() {
 
     try {
       setIsLoadingWatchlist(true);
+      setError(null);
+
       if (!movie.watchlist_status) {
-        await axiosClient.post("/movies/watchlist/", {
+        await axiosClient.post("/movies/watchlist", {
           tmdb_id: tmdbId,
           status: "watchlist",
         });
@@ -112,7 +118,11 @@ function MovieDetail() {
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
-      console.error("Failed to update watchlist:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to update watchlist. Please try again.";
+      setError(errorMessage);
+      console.error("Watchlist error:", error);
     } finally {
       setIsLoadingWatchlist(false);
     }
@@ -123,8 +133,9 @@ function MovieDetail() {
 
     try {
       setIsLoadingWatchlist(true);
+      setError(null);
       if (movie.watchlist_status !== "watched") {
-        await axiosClient.post("/watchlist/", {
+        await axiosClient.post("/watchlist", {
           tmdb_id: tmdbId,
           status: "watched",
         });
@@ -134,7 +145,11 @@ function MovieDetail() {
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
-      console.error("Failed to update watched status:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to update watched status. Please try again.";
+      setError(errorMessage);
+      console.error("Watched status error:", error);
     } finally {
       setIsLoadingWatchlist(false);
     }
@@ -145,8 +160,9 @@ function MovieDetail() {
 
     try {
       setIsLoadingFavorite(true);
+      setError(null);
       if (!movie.is_favorite) {
-        await axiosClient.post("/favorites/", {
+        await axiosClient.post("/favorites", {
           tmdb_id: tmdbId,
         });
         setMovie((prev) => ({ ...prev, is_favorite: true }));
@@ -155,7 +171,11 @@ function MovieDetail() {
         setMovie((prev) => ({ ...prev, is_favorite: false }));
       }
     } catch (error) {
-      console.error("Failed to toggle favorite:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to toggle favorite. Please try again.";
+      setError(errorMessage);
+      console.error("Favorite toggle error:", error);
     } finally {
       setIsLoadingFavorite(false);
     }
@@ -201,7 +221,19 @@ function MovieDetail() {
   if (error) {
     return (
       <div className="content-container">
-        <div className="error-message general">{error}</div>
+        <div className="error-message general">
+          <p>{error}</p>
+          <button
+            className="retry-button"
+            onClick={() => {
+              setError(null);
+              setIsLoading(true);
+              fetchMovieDetails();
+            }}
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -307,12 +339,11 @@ function MovieDetail() {
                 {movie.vote_count?.toLocaleString()}
               </span>
             </div>
-            <div className="metadata-item">
-              <MessageCircle size={16} />
-              <Link to={`/movie/${tmdbId}/comments`} className="metadata-link">
-                {movie.comments_count || 0} Comments
-              </Link>
-            </div>
+            <Link to={`/movie/${tmdbId}/comments`} className="metadata-item">
+              <MessageCircle size={20} className="metadata-icon" />
+              <span className="metadata-label">Comments</span>
+              <span className="metadata-value">{movie.comment_count || 0}</span>
+            </Link>
           </div>
 
           {/* Action Buttons */}
