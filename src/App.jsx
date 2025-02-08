@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -11,33 +11,92 @@ import Search from "./pages/Search";
 import MovieDetail from "./pages/MovieDetail";
 import MovieListPage from "./pages/MovieListPage";
 import Comments from "./pages/Comments";
-import "./App.css";
+import Lists from "./pages/Lists";
+import ListDetail from "./pages/ListDetail";
+import CreateList from "./pages/CreateList";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
-// Temporary auth check - replace with actual auth logic
-const isAuthenticated = () => {
-  return localStorage.getItem("isAuthenticated") === "true";
+import "./App.css";
+import "./styles/Lists.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const { currentUser, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 };
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/search" element={<Search />} />
+        <Route path="/movie/:tmdbId" element={<MovieDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/movies/:type" element={<MovieListPage />} />
+        <Route path="/movie/:movieId/comments" element={<Comments />} />
+
+        <Route path="lists" element={<Lists />} />
+        <Route path="lists/:id" element={<ListDetail />} />
+        <Route
+          path="lists/create"
+          element={
+            <ProtectedRoute>
+              <CreateList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="lists/:id/edit"
+          element={
+            <ProtectedRoute>
+              <CreateList isEditing />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+    </Routes>
+  );
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/movie/:tmdbId" element={<MovieDetail />} />
-          <Route path="/lists" element={<div>Lists Page</div>} />
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/movies/:type" element={<MovieListPage />} />
-          <Route path="/movie/:movieId/comments" element={<Comments />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+        <ToastContainer />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

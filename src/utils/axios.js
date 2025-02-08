@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = "http://localhost:8002/api/v1";
 
@@ -91,6 +92,41 @@ axiosClient.interceptors.response.use(
     if (error.config?.__requestKey) {
       pendingRequests.delete(error.config.__requestKey);
     }
+
+    // Show error notification
+    let errorMessage = "An error occurred. Please try again.";
+
+    if (error.response) {
+      // Server responded with error
+      if (error.response.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (typeof error.response.data === "string") {
+        errorMessage = error.response.data;
+      }
+    } else if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT") {
+      errorMessage = "Request timed out. Please try again.";
+    } else if (!error.response) {
+      errorMessage = "Network error. Please check your connection.";
+    }
+
+    toast.error(errorMessage, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark", // Assuming dark theme, adjust if needed
+      style: {
+        background: "#1a1a1a",
+        color: "#fff",
+        borderRadius: "8px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      },
+    });
 
     const originalRequest = error.config;
 

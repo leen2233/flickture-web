@@ -226,6 +226,14 @@
   background-color: var(--primary-color);
   border: none;
   color: white;
+  width: 150px;
+  text-align: center;
+}
+
+.form-actions .submit .spinner {
+  width: 16px;
+  height: 16px;
+  margin: auto;
 }
 
 .form-actions .submit:hover:not(:disabled) {

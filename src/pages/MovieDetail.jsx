@@ -108,20 +108,20 @@ function MovieDetail() {
       setError(null);
 
       if (!movie.watchlist_status) {
-        await axiosClient.post("/movies/watchlist", {
+        await axiosClient.post("/watchlist", {
           tmdb_id: tmdbId,
           status: "watchlist",
         });
         setMovie((prev) => ({ ...prev, watchlist_status: "watchlist" }));
       } else {
-        await axiosClient.delete(`/movies/watchlist/${tmdbId}/`);
+        await axiosClient.delete(`/watchlist/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         "Failed to update watchlist. Please try again.";
-      setError(errorMessage);
+      // setError(errorMessage);
       console.error("Watchlist error:", error);
     } finally {
       setIsLoadingWatchlist(false);
@@ -135,8 +135,7 @@ function MovieDetail() {
       setIsLoadingWatchlist(true);
       setError(null);
       if (movie.watchlist_status !== "watched") {
-        await axiosClient.post("/watchlist", {
-          tmdb_id: tmdbId,
+        await axiosClient.patch(`/watchlist/${tmdbId}`, {
           status: "watched",
         });
         setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));

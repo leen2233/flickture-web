@@ -16,6 +16,7 @@ import {
   Trash,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
+import { toast } from "react-toastify";
 import "../styles/Comments.css";
 
 const RatingStars = ({
@@ -297,6 +298,14 @@ const CommentItem = ({
 const CommentForm = ({ onSubmit, onCancel }) => {
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!comment.trim() || rating === 0 || isSubmitting) return;
+    setIsSubmitting(true);
+    await onSubmit(comment, rating);
+    setIsSubmitting(false);
+  };
 
   return (
     <div className="comment-form">
@@ -310,18 +319,19 @@ const CommentForm = ({ onSubmit, onCancel }) => {
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your thoughts about the movie..."
         rows={4}
+        disabled={isSubmitting}
       />
 
       <div className="form-actions">
-        <button className="cancel" onClick={onCancel}>
+        <button className="cancel" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </button>
         <button
           className="submit"
-          disabled={!comment.trim() || rating === 0}
-          onClick={() => onSubmit(comment, rating)}
+          disabled={!comment.trim() || rating === 0 || isSubmitting}
+          onClick={handleSubmit}
         >
-          Post Review
+          {isSubmitting ? <div className="spinner small" /> : "Post Review"}
         </button>
       </div>
     </div>
@@ -404,17 +414,18 @@ function Comments() {
 
   const handleSubmitComment = async (content, rating) => {
     try {
-      await axiosClient.post(`/movies/${movieId}/comments/`, {
+      const response = await axiosClient.post(`/movies/${movieId}/comments/`, {
         content,
         rating,
         movie: movie.id,
       });
 
       setShowCommentForm(false);
-      setPage(1);
-      setComments([]);
+      // Add the new comment to the beginning of the list
+      setComments((prevComments) => [response.data, ...prevComments]);
     } catch (error) {
       console.error("Failed to submit comment:", error);
+      toast.error("Failed to post your review. Please try again.");
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Edit2,
   Settings,
@@ -12,6 +12,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import { formatDistanceToNow } from "date-fns";
 import MovieStatsModal from "../components/MovieStatsModal";
+import { useAuth } from "../contexts/AuthContext";
 
 function StatBox({ label, value, onClick }) {
   return (
@@ -48,14 +49,13 @@ function MovieCard({ item }) {
         <img src={movie.poster_url} alt={movie.title} />
         <div className="movie-info-overlay">
           <div className="movie-rating">★ {movie.rating.toFixed(1)}</div>
-          <div className="movie-year">{movie.year}</div>
+          <div className="movie-info-bottom">
+            <h3 className="movie-title">{movie.title}</h3>
+            <span className="movie-updated">
+              {formatDistanceToNow(new Date(updated_at))} ago
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="movie-details">
-        <h3 className="movie-title">{movie.title}</h3>
-        <span className="movie-updated">
-          {formatDistanceToNow(new Date(updated_at))} ago
-        </span>
       </div>
     </div>
   );
@@ -104,32 +104,15 @@ function MovieList({
 
 function Profile() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { currentUser, updateUser } = useAuth();
   const [showWatchedModal, setShowWatchedModal] = useState(false);
   const [watchedMovies, setWatchedMovies] = useState([]);
   const [isLoadingWatched, setIsLoadingWatched] = useState(false);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axiosClient.get("/auth/me");
-        setUserData(response.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to load profile");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
   const handleWatchedClick = async () => {
     setIsLoadingWatched(true);
     try {
-      const response = await axiosClient.get("/movies/lists/recently_watched");
+      const response = await axiosClient.get("/watchlist?status=watched");
       setWatchedMovies(response.data);
       setShowWatchedModal(true);
     } catch (error) {
@@ -139,23 +122,7 @@ function Profile() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="profile-container">
-        <div className="loading-spinner">Loading...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="profile-container">
-        <div className="error-message general">{error}</div>
-      </div>
-    );
-  }
-
-  if (!userData) {
+  if (!currentUser) {
     return (
       <div className="profile-container">
         <div className="error-message general">No profile data available</div>
@@ -169,7 +136,7 @@ function Profile() {
         <div className="profile-header">
           <div className="profile-cover">
             <img
-              src={userData.banner_image || "/default-banner.jpg"}
+              src={currentUser.banner_image || "/default-banner.jpg"}
               alt="Profile Banner"
               className="banner-image"
             />
@@ -184,7 +151,7 @@ function Profile() {
             </div>
             <div className="profile-avatar-wrapper">
               <img
-                src={userData.avatar || "/default-avatar.jpg"}
+                src={currentUser.avatar || "/default-avatar.jpg"}
                 alt="Profile"
                 className="profile-avatar"
               />
@@ -193,25 +160,27 @@ function Profile() {
 
           <div className="profile-info">
             <div className="profile-text">
-              <h1>{userData.full_name || userData.username}</h1>
-              <span className="username">@{userData.username}</span>
-              {userData.about && <p className="about-text">{userData.about}</p>}
+              <h1>{currentUser.full_name || currentUser.username}</h1>
+              <span className="username">@{currentUser.username}</span>
+              {currentUser.about && (
+                <p className="about-text">{currentUser.about}</p>
+              )}
             </div>
 
             <div className="stats-row">
               <StatBox
                 label="Movies Watched"
-                value={userData.stats.movies_watched}
+                value={currentUser.stats.movies_watched}
                 onClick={handleWatchedClick}
               />
               <StatBox
                 label="Following"
-                value={userData.stats.following}
+                value={currentUser.stats.following}
                 onClick={() => {}}
               />
               <StatBox
                 label="Followers"
-                value={userData.stats.followers}
+                value={currentUser.stats.followers}
                 onClick={() => {}}
               />
             </div>
@@ -221,24 +190,24 @@ function Profile() {
         <div className="profile-content-lists">
           <MovieList
             title="Recently Watched"
-            movies={userData.recently_watched}
-            count={userData.stats.movies_watched}
+            movies={currentUser.recently_watched}
+            count={currentUser.stats.movies_watched}
             type="recently-watched"
             icon={Clock}
             emptyMessage="No movies watched yet. Start watching!"
           />
           <MovieList
             title="Want to Watch"
-            movies={userData.watchlist}
-            count={userData.watchlist?.length}
+            movies={currentUser.watchlist}
+            count={currentUser.watchlist?.length}
             type="want-to-watch"
             icon={BookMarked}
             emptyMessage="Your watchlist is empty. Start adding movies!"
           />
           <MovieList
             title="Favorites"
-            movies={userData.favorites}
-            count={userData.favorites?.length}
+            movies={currentUser.favorites}
+            count={currentUser.favorites?.length}
             type="favorites"
             icon={Heart}
             emptyMessage="No favorite movies yet. Mark some movies as favorites!"
@@ -249,7 +218,7 @@ function Profile() {
       {showWatchedModal && (
         <MovieStatsModal
           title="Movies Watched"
-          type="recently-watched"
+          type="watched"
           onClose={() => setShowWatchedModal(false)}
         />
       )}
