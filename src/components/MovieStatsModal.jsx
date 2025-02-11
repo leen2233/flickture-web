@@ -18,7 +18,7 @@ function MovieStatsModal({ title, type, onClose }) {
   const fetchMovies = async (pageNum = 1, search = "") => {
     try {
       setIsLoading(true);
-      const response = await axiosClient.get(`/watchlist?status=${type}`, {
+      const response = await axiosClient.get(`/watchlist/?status=${type}`, {
         params: {
           page: pageNum,
           search: search,
@@ -80,7 +80,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.watchlist_status) {
-        await axiosClient.post("/watchlist", {
+        await axiosClient.post("/watchlist/", {
           tmdb_id: movie.tmdb_id,
           status: "watchlist",
         });
@@ -92,7 +92,7 @@ function MovieStatsModal({ title, type, onClose }) {
           )
         );
       } else {
-        await axiosClient.delete(`/watchlist/${movie.tmdb_id}`);
+        await axiosClient.delete(`/watchlist/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id
@@ -109,7 +109,7 @@ function MovieStatsModal({ title, type, onClose }) {
   const handleWatchedToggle = async (e, movie) => {
     e.stopPropagation();
     try {
-      await axiosClient.post("/watchlist", {
+      await axiosClient.post("/watchlist/", {
         tmdb_id: movie.tmdb_id,
         status: "watched",
       });
@@ -129,7 +129,7 @@ function MovieStatsModal({ title, type, onClose }) {
     e.stopPropagation();
     try {
       if (!movie.is_favorite) {
-        await axiosClient.post("/favorites", {
+        await axiosClient.post("/favorites/", {
           tmdb_id: movie.tmdb_id,
         });
         setMovies((prev) =>
@@ -140,7 +140,7 @@ function MovieStatsModal({ title, type, onClose }) {
           )
         );
       } else {
-        await axiosClient.delete(`/favorites/${movie.tmdb_id}`);
+        await axiosClient.delete(`/favorites/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id

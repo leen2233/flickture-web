@@ -36,7 +36,7 @@ function Login() {
 
     setIsLoading(true);
     try {
-      const response = await axiosClient.post("/auth/login", {
+      const response = await axiosClient.post("/auth/login/", {
         username: email, // Django expects username
         password: password,
       });

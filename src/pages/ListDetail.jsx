@@ -37,45 +37,13 @@ function MovieItem({ movie }) {
 
   const handleWatchlistAction = async (newStatus) => {
     try {
-      await axiosClient.post(`/watchlist/${movie.tmdb_id}`, {
+      await axiosClient.post(`/watchlist/${movie.tmdb_id}/`, {
         status: newStatus,
         tmdb_id: movie.tmdb_id,
       });
       setStatus(newStatus);
     } catch (error) {
       console.error("Error updating watchlist:", error);
-    }
-  };
-
-  const getStatusButton = () => {
-    switch (status) {
-      case "watched":
-        return (
-          <button className="status-button watched">
-            <Check size={16} />
-            <span>Watched</span>
-          </button>
-        );
-      case "watchlist":
-        return (
-          <button
-            className="status-button watchlist"
-            onClick={() => handleWatchlistAction("watched")}
-          >
-            <Clock size={16} />
-            <span>Watch Next</span>
-          </button>
-        );
-      default:
-        return (
-          <button
-            className="status-button add"
-            onClick={() => handleWatchlistAction("watchlist")}
-          >
-            <Plus size={16} />
-            <span>Add to Watchlist</span>
-          </button>
-        );
     }
   };
 
@@ -104,7 +72,6 @@ function MovieItem({ movie }) {
           <h3 className="movie-card-title">{movie.title}</h3>
           <div className="movie-card-meta">
             <span className="movie-year">{movie.year}</span>
-            {getStatusButton()}
           </div>
         </div>
       </Link>

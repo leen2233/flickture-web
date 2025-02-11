@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 import MovieDetailSkeleton from "../components/skeletons/MovieDetailSkeleton";
+import { RatingStars } from "../components/RatingStars";
+import { toast } from "react-toastify";
 
 function CollectionSection({ collection, collection_movies }) {
   const navigate = useNavigate();
@@ -57,6 +59,63 @@ function CollectionSection({ collection, collection_movies }) {
   );
 }
 
+const WatchedCommentModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+
+  const handleSubmit = async () => {
+    if (!rating) {
+      toast.error("Please select a rating");
+      return;
+    }
+    await onSubmit(comment, rating);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Rate This Movie</h2>
+        <p className="modal-subtitle">How would you rate this movie? Leave a review if you'd like to share your thoughts.</p>
+        
+        <div className="rating-section">
+          <RatingStars rating={rating} interactive onRatingChange={setRating} />
+        </div>
+
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Write your review (optional)"
+          rows={4}
+          disabled={isSubmitting}
+        />
+
+        <div className="modal-actions">
+          <button 
+            className="secondary-button" 
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Skip Review
+          </button>
+          <button
+            className="primary-button"
+            onClick={handleSubmit}
+            disabled={!rating || isSubmitting}
+          >
+            {isSubmitting ? (
+              <Loader2 size={20} className="spin" />
+            ) : (
+              "Post Review"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function MovieDetail() {
   const { tmdbId } = useParams();
   const location = useLocation();
@@ -66,6 +125,8 @@ function MovieDetail() {
   const [error, setError] = useState(null);
   const [isLoadingWatchlist, setIsLoadingWatchlist] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -108,7 +169,7 @@ function MovieDetail() {
       setError(null);
 
       if (!movie.watchlist_status) {
-        await axiosClient.post("/watchlist", {
+        await axiosClient.post("/watchlist/", {
           tmdb_id: tmdbId,
           status: "watchlist",
         });
@@ -131,26 +192,44 @@ function MovieDetail() {
   const handleWatchedToggle = async () => {
     if (isLoadingWatchlist) return;
 
-    try {
-      setIsLoadingWatchlist(true);
-      setError(null);
-      if (movie.watchlist_status !== "watched") {
-        await axiosClient.patch(`/watchlist/${tmdbId}`, {
+    if (movie.watchlist_status !== "watched") {
+      try {
+        setIsLoadingWatchlist(true);
+        setError(null);
+        
+        // Mark as watched first
+        await axiosClient.patch(`/watchlist/${tmdbId}/`, {
           status: "watched",
         });
+        
         setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));
-      } else {
+        
+        // Then show review modal
+        setShowCommentModal(true);
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ||
+          "Failed to update watched status. Please try again.";
+        setError(errorMessage);
+        console.error("Watched status error:", error);
+      } finally {
+        setIsLoadingWatchlist(false);
+      }
+    } else {
+      try {
+        setIsLoadingWatchlist(true);
+        setError(null);
         await axiosClient.delete(`/watchlist/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ||
+          "Failed to update watched status. Please try again.";
+        setError(errorMessage);
+        console.error("Watched status error:", error);
+      } finally {
+        setIsLoadingWatchlist(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to update watched status. Please try again.";
-      setError(errorMessage);
-      console.error("Watched status error:", error);
-    } finally {
-      setIsLoadingWatchlist(false);
     }
   };
 
@@ -161,7 +240,7 @@ function MovieDetail() {
       setIsLoadingFavorite(true);
       setError(null);
       if (!movie.is_favorite) {
-        await axiosClient.post("/favorites", {
+        await axiosClient.post("/favorites/", {
           tmdb_id: tmdbId,
         });
         setMovie((prev) => ({ ...prev, is_favorite: true }));
@@ -210,6 +289,31 @@ function MovieDetail() {
       navigate("/profile");
     } else {
       navigate(-1);
+    }
+  };
+
+  const handleCommentSubmit = async (content, rating) => {
+    try {
+      setIsSubmittingComment(true);
+      setError(null);
+      
+      // Only post the comment
+      await axiosClient.post(`/movies/${tmdbId}/comments/`, {
+        content,
+        rating,
+        movie: movie.id,
+      });
+      
+      setShowCommentModal(false);
+      toast.success("Review posted successfully!");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to post review. Please try again.";
+      setError(errorMessage);
+      console.error("Comment submission error:", error);
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
@@ -501,6 +605,13 @@ function MovieDetail() {
           )}
         </div>
       </div>
+
+      <WatchedCommentModal
+        isOpen={showCommentModal}
+        onClose={() => setShowCommentModal(false)}
+        onSubmit={handleCommentSubmit}
+        isSubmitting={isSubmittingComment}
+      />
     </div>
   );
 }

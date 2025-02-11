@@ -85,7 +85,7 @@ function EditProfile() {
     });
 
     try {
-      await axiosClient.patch("/auth/me", data, {
+      await axiosClient.patch("/auth/me/", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

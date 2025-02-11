@@ -112,7 +112,7 @@ function Profile() {
   const handleWatchedClick = async () => {
     setIsLoadingWatched(true);
     try {
-      const response = await axiosClient.get("/watchlist?status=watched");
+      const response = await axiosClient.get("/watchlist/?status=watched");
       setWatchedMovies(response.data);
       setShowWatchedModal(true);
     } catch (error) {
