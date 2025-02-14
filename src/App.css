@@ -2398,3 +2398,344 @@ input.error {
     font-size: 0.875rem;
   }
 }
+
+/* Person Detail Styles */
+.person-detail-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #040b1c;
+  color: white;
+  padding-top: 80px;
+}
+
+.movie-nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.person-detail-content {
+  position: relative;
+  padding: 0 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.person-detail-main {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.person-poster-large {
+  width: 300px;
+  height: 450px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background-color: #270a39;
+  border: 1px solid rgba(220, 63, 114, 0.1);
+  flex-shrink: 0;
+}
+
+.person-poster-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-info-detailed {
+  flex: 1;
+}
+
+.person-info-detailed h1 {
+  font-size: 48px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: white;
+}
+
+/* Biography styles */
+.person-biography {
+  margin: 32px 0;
+}
+
+.person-biography h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #dc3f72;
+}
+
+.biography-content {
+  position: relative;
+  max-height: 80px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.biography-content.expanded {
+  max-height: 1000px;
+}
+
+.biography-content p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.biography-content:not(.expanded)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, #040b1c);
+}
+
+.expand-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #dc3f72;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin: 8px 0 0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.expand-button:hover {
+  background: rgba(220, 63, 114, 0.1);
+}
+
+/* Stats Section */
+.stats-section {
+  margin-bottom: 24px;
+  background: #270a39;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(220, 63, 114, 0.1);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.stat-box:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Follow Button */
+.follow-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #dc3f72;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.follow-button:hover {
+  background: #e04b7d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 63, 114, 0.3);
+}
+
+.follow-button.following {
+  background: transparent;
+  border: 1px solid rgba(220, 63, 114, 0.3);
+  color: #dc3f72;
+}
+
+.follow-button.following:hover {
+  background: rgba(220, 63, 114, 0.1);
+  border-color: #dc3f72;
+}
+
+.followers-count {
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 4px;
+}
+
+.follow-button.following .followers-count {
+  color: rgba(220, 63, 114, 0.7);
+}
+
+/* Social Media Section */
+.social-media-section {
+  margin-top: 32px;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.social-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #270a39;
+  border: 1px solid rgba(220, 63, 114, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.social-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.social-button span {
+  font-size: 14px;
+}
+
+/* Update meta items style */
+.person-meta-detailed .meta-item {
+  background: #270a39;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(220, 63, 114, 0.1);
+}
+
+.person-meta-detailed .meta-item span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .stats-section {
+    padding: 16px;
+  }
+
+  .stats-row {
+    gap: 12px;
+  }
+
+  .stat-box {
+    padding: 8px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .person-biography {
+    text-align: left;
+  }
+
+  .biography-content {
+    max-height: 60px;
+  }
+
+  .biography-content p {
+    font-size: 13px;
+  }
+
+  .expand-button {
+    font-size: 12px;
+    padding: 4px;
+  }
+}
+
+.name-follow-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.name-follow-section h1 {
+  margin: 0;
+}
+
+.follow-button {
+  height: 36px;
+  padding: 0 1rem;
+  border-radius: 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: #dc3f72;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.follow-button.following {
+  background-color: #2c2c2c;
+}
+
+.follow-button:hover {
+  background-color: #c23563;
+}
+
+.follow-button.following:hover {
+  background-color: #3c3c3c;
+}

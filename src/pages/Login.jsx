@@ -4,7 +4,7 @@ import axiosClient from "../utils/axios";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,10 +13,8 @@ function Login() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Please enter a valid email address";
+    if (!login) {
+      newErrors.login = "Username or Email is required";
     }
 
     if (!password) {
@@ -37,7 +35,7 @@ function Login() {
     setIsLoading(true);
     try {
       const response = await axiosClient.post("/auth/login/", {
-        username: email, // Django expects username
+        login: login, // Django expects username
         password: password,
       });
 
@@ -47,7 +45,7 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
 
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       const errorMessage =
         error.response?.data?.non_field_errors?.[0] ||
@@ -77,19 +75,19 @@ function Login() {
 
         <div className="form-group">
           <input
-            type="email"
-            value={email}
+            type="text"
+            value={login}
             onChange={(e) => {
-              setEmail(e.target.value);
-              if (errors.email) {
-                setErrors((prev) => ({ ...prev, email: "" }));
+              setLogin(e.target.value);
+              if (errors.login) {
+                setErrors((prev) => ({ ...prev, login: "" }));
               }
             }}
             placeholder="Email"
-            className={errors.email ? "error" : ""}
+            className={errors.login ? "error" : ""}
           />
-          {errors.email && (
-            <span className="error-message">{errors.email}</span>
+          {errors.login && (
+            <span className="error-message">{errors.login}</span>
           )}
         </div>
 

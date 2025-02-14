@@ -400,7 +400,7 @@ function MovieDetail() {
                     {movie.directors.map((director) => (
                       <Link
                         key={director.id}
-                        to={`/person/${director.id}`}
+                        to={`/person/${director.tmdb_id}`}
                         className="director-item"
                       >
                         <div className="director-image-container">
@@ -553,7 +553,7 @@ function MovieDetail() {
                 {movie.cast_preview.slice(0, 8).map((cast) => (
                   <Link
                     key={cast.person.id}
-                    to={`/person/${cast.person.id}`}
+                    to={`/person/${cast.person.tmdb_id}`}
                     className="cast-member"
                   >
                     <div className="cast-image-container">

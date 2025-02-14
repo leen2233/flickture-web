@@ -14,6 +14,7 @@ import Comments from "./pages/Comments";
 import Lists from "./pages/Lists";
 import ListDetail from "./pages/ListDetail";
 import CreateList from "./pages/CreateList";
+import PersonDetail from "./pages/PersonDetail";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 import "./App.css";
@@ -61,6 +62,7 @@ function AppRoutes() {
         />
         <Route path="/search" element={<Search />} />
         <Route path="/movie/:tmdbId" element={<MovieDetail />} />
+        <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/movies/:type" element={<MovieListPage />} />
