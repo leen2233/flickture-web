@@ -82,6 +82,11 @@ function Register() {
   return (
     <div className="login-container">
       <div className="login-box">
+        <div className="return-link">
+          <a href="/" className="back-to-site">
+            ← Return to site
+          </a>
+        </div>
         <div className="header-container">
           <h1 className="title">Create Account</h1>
           <p className="subtitle">Sign up to get started</p>

@@ -77,8 +77,11 @@ const WatchedCommentModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Rate This Movie</h2>
-        <p className="modal-subtitle">How would you rate this movie? Leave a review if you'd like to share your thoughts.</p>
-        
+        <p className="modal-subtitle">
+          How would you rate this movie? Leave a review if you'd like to share
+          your thoughts.
+        </p>
+
         <div className="rating-section">
           <RatingStars rating={rating} interactive onRatingChange={setRating} />
         </div>
@@ -92,8 +95,8 @@ const WatchedCommentModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
         />
 
         <div className="modal-actions">
-          <button 
-            className="secondary-button" 
+          <button
+            className="secondary-button"
             onClick={onClose}
             disabled={isSubmitting}
           >
@@ -196,14 +199,14 @@ function MovieDetail() {
       try {
         setIsLoadingWatchlist(true);
         setError(null);
-        
+
         // Mark as watched first
         await axiosClient.patch(`/watchlist/${tmdbId}/`, {
           status: "watched",
         });
-        
+
         setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));
-        
+
         // Then show review modal
         setShowCommentModal(true);
       } catch (error) {
@@ -296,14 +299,14 @@ function MovieDetail() {
     try {
       setIsSubmittingComment(true);
       setError(null);
-      
+
       // Only post the comment
       await axiosClient.post(`/movies/${tmdbId}/comments/`, {
         content,
         rating,
         movie: movie.id,
       });
-      
+
       setShowCommentModal(false);
       toast.success("Review posted successfully!");
     } catch (error) {

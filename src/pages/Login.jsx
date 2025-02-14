@@ -66,6 +66,11 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
+        <div className="return-link">
+          <a href="/" className="back-to-site">
+            ← Return to site
+          </a>
+        </div>
         <div className="logo-container">
           <img src="/logo.png" alt="Flickture Logo" className="logo" />
         </div>

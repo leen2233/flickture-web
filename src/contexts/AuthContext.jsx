@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateUser,
     checkAuth,
+    isAuthenticated: !!currentUser,
   };
 
   if (loading) {

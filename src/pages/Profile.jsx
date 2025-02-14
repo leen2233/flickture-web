@@ -104,7 +104,7 @@ function MovieList({
 
 function Profile() {
   const navigate = useNavigate();
-  const { currentUser, updateUser } = useAuth();
+  const { currentUser, updateUser, logout } = useAuth();
   const [showWatchedModal, setShowWatchedModal] = useState(false);
   const [watchedMovies, setWatchedMovies] = useState([]);
   const [isLoadingWatched, setIsLoadingWatched] = useState(false);
@@ -147,6 +147,15 @@ function Profile() {
               >
                 <Edit2 size={16} />
                 <span>Edit Profile</span>
+              </button>
+              <button
+                className="logout-button"
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <Settings size={16} />
+                <span>Logout</span>
               </button>
             </div>
             <div className="profile-avatar-wrapper">
