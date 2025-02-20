@@ -575,7 +575,7 @@ function MovieDetail() {
           {movie.collection && (
             <CollectionSection
               collection={movie.collection}
-              collection_movies={movie.collection_movies}
+              collection_movies={movie.collection.movies}
             />
           )}
 

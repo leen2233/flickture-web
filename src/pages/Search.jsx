@@ -15,54 +15,88 @@ import axiosClient from "../utils/axios";
 import "../styles/Search.css";
 import SearchInput from "../components/SearchInput";
 
-function MovieCard({ movie }) {
+function SearchResultCard({ item }) {
   const [searchParams] = useSearchParams();
 
-  return (
+  if (item.media_type === "person") {
+    return (
+      <Link
+        to={`/person/${item.tmdb_id}`}
+        state={{
+          from: "search",
+          search: searchParams.toString() ? `?${searchParams.toString()}` : "",
+        }}
+        className="search-person-card"
+      >
+        <div className="person-image">
+          <img
+            src={item.profile_path || "/default-avatar.png"}
+            alt={item.name}
+          />
+        </div>
+        <div className="person-info">
+          <div className="person-header">
+            <h3>{item.name}</h3>
+            <span className="type">Person</span>
+          </div>
+          <span className="department">{item.known_for_department}</span>
+          {item.known_for && item.known_for.length > 0 && (
+            <div className="known-for">
+              <span className="known-for-label">Known for:</span>
+              <div className="known-for-movies">
+                {item.known_for.map((movie) => movie.title).join(", ")}
+              </div>
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  }
+
+  const posterUrl =
+    item.poster_preview_url ||
+    (item.media_type === "tv" ? "/default-tv.png" : "/default-movie.png");
+
+  const MediaCard = () => (
     <Link
-      to={`/movie/${movie.tmdb_id}`}
+      to={`/${item.media_type}/${item.tmdb_id}`}
       state={{
         from: "search",
         search: searchParams.toString() ? `?${searchParams.toString()}` : "",
       }}
-      className="search-movie-card"
+      className="search-media-card"
     >
-      <div className="movie-poster">
-        <img
-          src={movie.poster_preview_url || "/default-movie.jpg"}
-          alt={movie.title}
-        />
+      <div className="media-poster">
+        <img src={posterUrl} alt={item.title} />
+        {item.rating > 0 && (
+          <div className="rating-badge">
+            <Star size={12} />
+            <span>{item.rating.toFixed(1)}</span>
+          </div>
+        )}
       </div>
-      <div className="movie-info">
-        <h3>{movie.title}</h3>
-        <div className="movie-meta">
-          {movie.year && <span className="year">{movie.year}</span>}
-          {movie.rating && (
-            <span className="rating">
-              <Star size={16} className="star-icon" />
-              {movie.rating.toFixed(1)}
-            </span>
-          )}
-          {movie.vote_count > 0 && (
+      <div className="media-info">
+        <div className="media-header">
+          <h3>{item.title}</h3>
+          <span className="type">
+            {item.media_type === "tv" ? "TV Series" : "Movie"}
+          </span>
+        </div>
+        <div className="media-meta">
+          {item.year && <span className="year">{item.year}</span>}
+          {item.vote_count > 0 && (
             <span className="votes">
-              <Users size={16} />
-              {movie.vote_count.toLocaleString()}
+              <Users size={14} />
+              {item.vote_count.toLocaleString()}
             </span>
           )}
         </div>
-        {movie.genres && movie.genres.length > 0 && (
-          <div className="genres">
-            {movie.genres.map((genre) => (
-              <span key={genre.id} className="genre-tag">
-                {genre.name}
-              </span>
-            ))}
-          </div>
-        )}
-        <p className="overview">{movie.plot}</p>
+        {item.overview && <p className="overview">{item.overview}</p>}
       </div>
     </Link>
   );
+
+  return <MediaCard />;
 }
 
 function Search() {
@@ -77,6 +111,10 @@ function Search() {
   const [searchPerformed, setSearchPerformed] = useState(
     !!searchParams.get("q")
   );
+
+  useEffect(() => {
+    console.log(movies);
+  }, [movies]);
 
   useEffect(() => {
     const fetchMovieLists = async () => {
@@ -127,7 +165,7 @@ function Search() {
     setSearchPerformed(true);
 
     try {
-      const response = await axiosClient.get("/movies/search/widely", {
+      const response = await axiosClient.get("/movies/search/multi", {
         params: { query: searchQuery.trim() },
       });
       setMovies(response.data.results || []);
@@ -175,19 +213,26 @@ function Search() {
           {isLoading ? (
             <div className="loading-state">
               <Loader className="spin" size={24} />
-              <p>Searching movies...</p>
+              <p>Searching...</p>
             </div>
           ) : searchPerformed ? (
             movies.length > 0 ? (
-              <div className="movie-results">
-                {movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
-                ))}
+              <div className="search-results-grid">
+                {movies.map((item) => {
+                  if (item.tmdb_id) {
+                    return (
+                      <SearchResultCard
+                        key={`${item.media_type}-${item.tmdb_id}`}
+                        item={item}
+                      />
+                    );
+                  }
+                })}
               </div>
             ) : (
               <div className="empty-state">
                 <Film size={24} />
-                <p>No movies found. Try a different search term.</p>
+                <p>No results found. Try a different search term.</p>
               </div>
             )
           ) : isLoadingLists ? (

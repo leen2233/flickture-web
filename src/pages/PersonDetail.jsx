@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import {
@@ -13,18 +13,47 @@ import {
   Briefcase,
   ChevronDown,
   ChevronUp,
+  X,
+  Loader2,
 } from "lucide-react";
 import PersonDetailSkeleton from "../components/skeletons/PersonDetailSkeleton";
+
+const BiographyModal = ({ isOpen, onClose, biography }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content biography-modal">
+        <div className="modal-header">
+          <h2>Biography</h2>
+          <button className="close-button" onClick={onClose}>
+            <X size={20} />
+          </button>
+        </div>
+        <div className="modal-body">
+          <p>{biography}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PersonDetail = () => {
   const { id } = useParams();
   const [person, setPerson] = useState(null);
   const [filmography, setFilmography] = useState([]);
+  const [totalMovies, setTotalMovies] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
+  const [showBioModal, setShowBioModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [noMoreMovies, setNoMoreMovies] = useState(false);
+  const observer = useRef();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +66,7 @@ const PersonDetail = () => {
           ]);
         setPerson(personResponse.data);
         setFilmography(filmographyResponse.data.results);
+        setTotalMovies(filmographyResponse.data.count);
         setIsFollowing(followResponse.data.is_following);
         setFollowersCount(followResponse.data.followers_count);
       } catch (err) {
@@ -62,6 +92,48 @@ const PersonDetail = () => {
       }
     } catch (err) {
       console.error("Error toggling follow:", err);
+    }
+  };
+
+  // Intersection Observer callback
+  const lastMovieElementRef = useCallback(
+    (node) => {
+      if (isLoadingMore) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMoreMovies();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [isLoadingMore, hasMore]
+  );
+
+  // Function to load more movies
+  const loadMoreMovies = async () => {
+    if (isLoadingMore || !hasMore) return;
+
+    try {
+      setIsLoadingMore(true);
+      const nextPage = page + 1;
+      const response = await axiosClient.get(
+        `/persons/${id}/filmography/?page=${nextPage}`
+      );
+
+      setFilmography((prev) => [...prev, ...response.data.results]);
+      setPage(nextPage);
+      setHasMore(response.data.results.length > 0);
+    } catch (err) {
+      console.error("Error loading more movies:", err);
+      if (err.response?.status === 404) {
+        setHasMore(false);
+        setNoMoreMovies(true);
+      }
+    } finally {
+      setIsLoadingMore(false);
     }
   };
 
@@ -163,28 +235,15 @@ const PersonDetail = () => {
             {person.biography && (
               <div className="person-biography">
                 <h2>Biography</h2>
-                <div
-                  className={`biography-content ${
-                    isBioExpanded ? "expanded" : ""
-                  }`}
-                >
-                  <p>{person.biography}</p>
+                <div className="biography-content">
+                  <p>{person.biography.slice(0, 200)}...</p>
                 </div>
                 <button
                   className="expand-button"
-                  onClick={() => setIsBioExpanded(!isBioExpanded)}
+                  onClick={() => setShowBioModal(true)}
                 >
-                  {isBioExpanded ? (
-                    <>
-                      <span>Show Less</span>
-                      <ChevronUp size={16} />
-                    </>
-                  ) : (
-                    <>
-                      <span>Read More</span>
-                      <ChevronDown size={16} />
-                    </>
-                  )}
+                  <span>Read More</span>
+                  <ChevronRight size={16} />
                 </button>
               </div>
             )}
@@ -218,32 +277,32 @@ const PersonDetail = () => {
             <div className="section-header">
               <h2>Filmography</h2>
               <div className="see-all">
-                <span>Total {filmography.length} movies</span>
-                <ChevronRight size={16} />
+                <span>Total {totalMovies} movies</span>
               </div>
             </div>
             <div className="movies-scroll">
-              {filmography.map((movie) => (
+              {filmography.map((movie, index) => (
                 <Link
                   to={`/movie/${movie.tmdb_id}`}
                   key={movie.id}
                   className="movie-card"
+                  ref={
+                    index === filmography.length - 1 && !noMoreMovies
+                      ? lastMovieElementRef
+                      : null
+                  }
                 >
                   <div className="movie-poster">
                     {movie.poster_url ? (
                       <img src={movie.poster_url} alt={movie.title} />
                     ) : (
-                      <div className="placeholder-poster">
-                        <span>{movie.title[0]}</span>
-                      </div>
+                      <img src="/default-movie.png" alt={movie.title} />
                     )}
                     <div className="movie-info-overlay">
-                      {movie.rating > 0 && (
-                        <div className="movie-rating">
-                          <Star size={12} />
-                          {movie.rating.toFixed(1)}
-                        </div>
-                      )}
+                      <div className="movie-rating">
+                        <Star size={12} />
+                        <span>{movie.rating.toFixed(1)}</span>
+                      </div>
                       <div className="movie-info-bottom">
                         <h3 className="movie-title">{movie.title}</h3>
                         <span className="movie-year">{movie.year}</span>
@@ -253,9 +312,26 @@ const PersonDetail = () => {
                 </Link>
               ))}
             </div>
+            {isLoadingMore && (
+              <div className="loading-more">
+                <Loader2 size={24} className="spin" />
+                <span>Loading more movies...</span>
+              </div>
+            )}
+            {noMoreMovies && (
+              <div className="no-more-movies">
+                <span>That's all! You've seen all {totalMovies} movies.</span>
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      <BiographyModal
+        isOpen={showBioModal}
+        onClose={() => setShowBioModal(false)}
+        biography={person.biography}
+      />
     </div>
   );
 };
