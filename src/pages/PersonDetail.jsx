@@ -17,6 +17,7 @@ import {
   Loader2,
 } from "lucide-react";
 import PersonDetailSkeleton from "../components/skeletons/PersonDetailSkeleton";
+import { useAuth } from "../contexts/AuthContext";
 
 const BiographyModal = ({ isOpen, onClose, biography }) => {
   if (!isOpen) return null;
@@ -53,22 +54,27 @@ const PersonDetail = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [noMoreMovies, setNoMoreMovies] = useState(false);
+  const { isAuthenticated } = useAuth();
   const observer = useRef();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [personResponse, filmographyResponse, followResponse] =
-          await Promise.all([
-            axiosClient.get(`/persons/${id}`),
-            axiosClient.get(`/persons/${id}/filmography/`),
+        const [personResponse, filmographyResponse] = await Promise.all([
+          axiosClient.get(`/persons/${id}`),
+          axiosClient.get(`/persons/${id}/filmography/`),
+        ]);
+        if (isAuthenticated) {
+          const [followResponse] = await Promise.all([
             axiosClient.get(`/persons/${id}/follow/`),
           ]);
+
+          setIsFollowing(followResponse.data.is_following);
+          setFollowersCount(followResponse.data.followers_count);
+        }
         setPerson(personResponse.data);
         setFilmography(filmographyResponse.data.results);
         setTotalMovies(filmographyResponse.data.count);
-        setIsFollowing(followResponse.data.is_following);
-        setFollowersCount(followResponse.data.followers_count);
       } catch (err) {
         setError(err.message);
       } finally {
