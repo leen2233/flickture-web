@@ -301,7 +301,7 @@ function MovieDetail() {
       setError(null);
 
       // Only post the comment
-      await axiosClient.post(`/movies/${tmdbId}/comments/`, {
+      await axiosClient.post(`/movies/${tmdbId}/${movie.type}/comments/`, {
         content,
         rating,
         movie: movie.id,
@@ -445,7 +445,10 @@ function MovieDetail() {
                 {movie.vote_count?.toLocaleString()}
               </span>
             </div>
-            <Link to={`/movie/${tmdbId}/comments`} className="metadata-item">
+            <Link
+              to={`/${movie.type}/${tmdbId}/comments`}
+              className="metadata-item"
+            >
               <MessageCircle size={20} className="metadata-icon" />
               <span className="metadata-label">Comments</span>
               <span className="metadata-value">{movie.comment_count || 0}</span>
@@ -545,7 +548,7 @@ function MovieDetail() {
               <div className="cast-header">
                 <h2>Cast</h2>
                 <Link to={`/movie/${tmdbId}/cast`} className="see-all">
-                  <span>See all {movie.cast_preview.length}</span>
+                  <span>See all {movie.cast_count}</span>
                   <ChevronRight size={16} />
                 </Link>
               </div>

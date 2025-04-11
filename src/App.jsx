@@ -63,11 +63,11 @@ function AppRoutes() {
         />
         <Route path="/search" element={<Search />} />
         <Route path="/:type/:tmdbId" element={<MovieDetail />} />
+        <Route path="/:type/:movieId/comments" element={<Comments />} />
         <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/movies/:type" element={<MovieListPage />} />
-        <Route path="/movie/:movieId/comments" element={<Comments />} />
 
         <Route path="lists" element={<Lists />} />
         <Route path="lists/:id" element={<ListDetail />} />

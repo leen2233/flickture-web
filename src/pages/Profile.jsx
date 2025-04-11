@@ -7,6 +7,7 @@ import {
   Heart,
   ChevronRight,
   Film,
+  Star,
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../utils/axios";
@@ -38,7 +39,8 @@ function MovieCard({ item }) {
 
   return (
     <div
-      className="movie-card"
+      key={movie.tmdb_id}
+      className="movie-grid-item"
       onClick={() =>
         navigate(`/movie/${movie.tmdb_id}`, {
           state: { from: "profile" },
@@ -46,19 +48,53 @@ function MovieCard({ item }) {
       }
     >
       <div className="movie-poster">
-        <img src={movie.poster_url} alt={movie.title} />
-        <div className="movie-info-overlay">
-          <div className="movie-rating">★ {movie.rating.toFixed(1)}</div>
-          <div className="movie-info-bottom">
-            <h3 className="movie-title">{movie.title}</h3>
-            <span className="movie-updated">
-              {formatDistanceToNow(new Date(updated_at))} ago
-            </span>
+        <img
+          src={movie.poster_preview_url || "/default-movie.png"}
+          alt={movie.title}
+        />
+        {movie.is_favorite && (
+          <div className="movie-status favorite">
+            <Heart size={20} fill="var(--primary-color)" />
           </div>
+        )}
+      </div>
+      <div className="movie-info-compact profile-movie-info-compact">
+        <h3>{movie.title}</h3>
+        <div className="movie-meta">
+          {movie.rating && (
+            <span className="rating">
+              <Star size={14} className="star-icon" />
+              {movie.rating.toFixed(1)}
+            </span>
+          )}
+          {movie.year && <span className="year">({movie.year})</span>}
         </div>
       </div>
     </div>
   );
+  // return (
+  //   <div
+  //     className="movie-card"
+  //     onClick={() =>
+  //       navigate(`/movie/${movie.tmdb_id}`, {
+  //         state: { from: "profile" },
+  //       })
+  //     }
+  //   >
+  //     <div className="movie-poster">
+  //       <img src={movie.poster_url} alt={movie.title} />
+  //       <div className="movie-info-overlay">
+  //         <div className="movie-rating">★ {movie.rating.toFixed(1)}</div>
+  //         <div className="movie-info-bottom">
+  //           <h3 className="movie-title">{movie.title}</h3>
+  //           <span className="movie-updated">
+  //             {formatDistanceToNow(new Date(updated_at))} ago
+  //           </span>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 }
 
 function MovieList({
@@ -71,7 +107,7 @@ function MovieList({
 }) {
   if (!movies?.length) {
     return (
-      <div className="movie-list-section">
+      <div className="profile-movie-list-section">
         <div className="list-header">
           <Icon size={20} className="icon" />
           <h2>{title}</h2>
@@ -82,7 +118,7 @@ function MovieList({
   }
 
   return (
-    <div className="movie-list-section">
+    <div className="profile-movie-list-section">
       <div className="list-header">
         <Icon size={20} className="icon" />
         <h2>{title}</h2>
@@ -136,7 +172,7 @@ function Profile() {
         <div className="profile-header">
           <div className="profile-cover">
             <img
-              src={currentUser.banner_image || "/default-banner.jpg"}
+              src={currentUser.banner_image || "/default-banner.png"}
               alt="Profile Banner"
               className="banner-image"
             />
@@ -160,7 +196,7 @@ function Profile() {
             </div>
             <div className="profile-avatar-wrapper">
               <img
-                src={currentUser.avatar || "/default-avatar.jpg"}
+                src={currentUser.avatar || "/default-avatar.png"}
                 alt="Profile"
                 className="profile-avatar"
               />

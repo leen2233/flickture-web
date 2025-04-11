@@ -47,6 +47,7 @@ const CommentItem = ({
   is_liked: initialIsLiked = false,
   is_owner,
   movieId,
+  type,
   movie,
   onDelete,
 }) => {
@@ -62,7 +63,7 @@ const CommentItem = ({
   const handleLike = async () => {
     try {
       const response = await axiosClient.post(
-        `/movies/${movieId}/comments/${id}/like/`
+        `/movies/${movieId}/${type}/comments/${id}/like/`
       );
       setIsLiked(response.data.liked);
       setLikes(response.data.likes_count);
@@ -76,12 +77,15 @@ const CommentItem = ({
 
     try {
       setIsSubmitting(true);
-      const response = await axiosClient.post(`/movies/${movieId}/comments/`, {
-        content: responseText,
-        parent: id,
-        movie: movie.id,
-        rating: 1,
-      });
+      const response = await axiosClient.post(
+        `/movies/${movieId}/${type}/comments/`,
+        {
+          content: responseText,
+          parent: id,
+          movie: movie.id,
+          rating: 1,
+        }
+      );
 
       setLocalResponses([...localResponses, response.data]);
       setResponseText("");
@@ -108,7 +112,7 @@ const CommentItem = ({
       try {
         setIsSubmitting(true);
         const newResponse = await axiosClient.post(
-          `/movies/${movieId}/comments/`,
+          `/movies/${movieId}/${type}/comments/`,
           {
             content: responseText,
             parent: id, // Use the main comment's id as parent
@@ -339,7 +343,7 @@ const CommentForm = ({ onSubmit, onCancel }) => {
 };
 
 function Comments() {
-  const { movieId } = useParams();
+  const { movieId, type } = useParams();
   const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
   const [comments, setComments] = useState([]);
@@ -370,7 +374,7 @@ function Comments() {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await axiosClient.get(`/movies/${movieId}`);
+        const response = await axiosClient.get(`/movies/${movieId}/${type}`);
         setMovie(response.data);
       } catch (error) {
         console.error("Failed to fetch movie:", error);
@@ -382,7 +386,7 @@ function Comments() {
 
   const handleDeleteComment = async (id) => {
     try {
-      await axiosClient.delete(`/movies/${movieId}/comments/${id}/`);
+      await axiosClient.delete(`/movies/${movieId}/${type}/comments/${id}/`);
       setComments((prev) => prev.filter((comment) => comment.id !== id));
     } catch (error) {
       console.error("Failed to delete comment:", error);
@@ -394,7 +398,7 @@ function Comments() {
       try {
         setIsLoading(true);
         const response = await axiosClient.get(
-          `/movies/${movieId}/comments/?page=${page}&rating=${selectedRating}&sort_by=${sortBy}`
+          `/movies/${movieId}/${type}/comments/?page=${page}&rating=${selectedRating}&sort_by=${sortBy}`
         );
         setComments((prev) =>
           page === 1
@@ -414,11 +418,14 @@ function Comments() {
 
   const handleSubmitComment = async (content, rating) => {
     try {
-      const response = await axiosClient.post(`/movies/${movieId}/comments/`, {
-        content,
-        rating,
-        movie: movie.id,
-      });
+      const response = await axiosClient.post(
+        `/movies/${movieId}/${type}/comments/`,
+        {
+          content,
+          rating,
+          movie: movie.id,
+        }
+      );
 
       setShowCommentForm(false);
       // Add the new comment to the beginning of the list
@@ -432,7 +439,7 @@ function Comments() {
   return (
     <div className="comments-page">
       <header className="page-header">
-        <button className="back-button" onClick={() => navigate(-1)}>
+        <button className="nav-button" onClick={() => navigate(-1)}>
           <ArrowLeft size={20} />
           <span>Back</span>
         </button>
@@ -488,7 +495,7 @@ function Comments() {
                   className={selectedRating === rating ? "active" : ""}
                   onClick={() => setSelectedRating(rating)}
                 >
-                  {rating === 0 ? "All" : `${rating}★`}
+                  {rating === 0 ? "All" : `${rating} ★`}
                 </button>
               ))}
             </div>

@@ -40,6 +40,8 @@
   outline: none;
   padding: 0;
   width: auto;
+  border-radius: 0;
+  height: 40px;
 }
 
 .search-input-wrapper input:focus {

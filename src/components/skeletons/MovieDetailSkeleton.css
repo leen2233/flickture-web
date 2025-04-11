@@ -19,7 +19,7 @@
     rgba(40, 40, 40, 0.8) 25%,
     rgba(50, 50, 50, 0.8) 50%,
     rgba(40, 40, 40, 0.8) 75%
-  );
+  ) !important;
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
 }
@@ -90,6 +90,7 @@
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   margin-bottom: 1rem;
+  border-color: rgb(49, 49, 49) !important;
 }
 
 .skeleton-avatar {

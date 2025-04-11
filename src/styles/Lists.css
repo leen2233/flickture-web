@@ -20,6 +20,10 @@
   margin-bottom: 24px;
 }
 
+.lists-page-content {
+  margin-top: 50px;
+}
+
 .create-list-button {
   display: inline-flex;
   align-items: center;
@@ -232,6 +236,7 @@
   border: 1px solid var(--border-color);
   border-radius: 16px;
   color: var(--text-secondary);
+  margin-bottom: 40px;
 }
 
 .lists-section-empty svg {
@@ -635,7 +640,6 @@
   gap: 24px;
   margin-bottom: 32px;
   max-width: 1200px;
-  margin: 0 auto 32px;
 }
 
 .page-header h1 {
