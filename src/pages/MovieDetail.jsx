@@ -120,7 +120,7 @@ const WatchedCommentModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
 };
 
 function MovieDetail() {
-  const { tmdbId } = useParams();
+  const { tmdbId, type } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
@@ -138,7 +138,7 @@ function MovieDetail() {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axiosClient.get(`/movies/${tmdbId}`);
+        const response = await axiosClient.get(`/movies/${tmdbId}/${type}`);
         if (isMounted) {
           setMovie(response.data);
         }

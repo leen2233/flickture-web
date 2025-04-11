@@ -307,7 +307,7 @@ const PersonDetail = () => {
                     <div className="movie-info-overlay">
                       <div className="movie-rating">
                         <Star size={12} />
-                        <span>{movie.rating.toFixed(1)}</span>
+                        <span>{movie.rating && movie.rating.toFixed(1)}</span>
                       </div>
                       <div className="movie-info-bottom">
                         <h3 className="movie-title">{movie.title}</h3>

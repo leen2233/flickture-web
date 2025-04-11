@@ -21,7 +21,7 @@ function MovieList({ title, movies, icon: Icon, showStatus, onMovieClick }) {
                 style: { cursor: "pointer" },
               }
             : {
-                to: `/movie/${movie.tmdb_id}`,
+                to: `/${movie.type}/${movie.tmdb_id}`,
               };
 
           return (

@@ -62,8 +62,7 @@ function AppRoutes() {
           }
         />
         <Route path="/search" element={<Search />} />
-        <Route path="/movie/:tmdbId" element={<MovieDetail />} />
-        <Route path="/tv/:tmdbId" element={<TvShowDetail />} />
+        <Route path="/:type/:tmdbId" element={<MovieDetail />} />
         <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />

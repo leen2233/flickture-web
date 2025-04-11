@@ -18,7 +18,7 @@ import SearchInput from "../components/SearchInput";
 function SearchResultCard({ item }) {
   const [searchParams] = useSearchParams();
 
-  if (item.media_type === "person") {
+  if (item.type === "person") {
     return (
       <Link
         to={`/person/${item.tmdb_id}`}
@@ -55,11 +55,11 @@ function SearchResultCard({ item }) {
 
   const posterUrl =
     item.poster_preview_url ||
-    (item.media_type === "tv" ? "/default-tv.png" : "/default-movie.png");
+    (item.type === "tv" ? "/default-tv.png" : "/default-movie.png");
 
   const MediaCard = () => (
     <Link
-      to={`/${item.media_type}/${item.tmdb_id}`}
+      to={`/${item.type}/${item.tmdb_id}`}
       state={{
         from: "search",
         search: searchParams.toString() ? `?${searchParams.toString()}` : "",
@@ -79,7 +79,7 @@ function SearchResultCard({ item }) {
         <div className="media-header">
           <h3>{item.title}</h3>
           <span className="type">
-            {item.media_type === "tv" ? "TV Series" : "Movie"}
+            {item.type === "tv" ? "TV Series" : "Movie"}
           </span>
         </div>
         <div className="media-meta">
@@ -165,7 +165,7 @@ function Search() {
     setSearchPerformed(true);
 
     try {
-      const response = await axiosClient.get("/movies/search/multi", {
+      const response = await axiosClient.get("/movies/search/multi/", {
         params: { query: searchQuery.trim() },
       });
       setMovies(response.data.results || []);
@@ -222,7 +222,7 @@ function Search() {
                   if (item.tmdb_id) {
                     return (
                       <SearchResultCard
-                        key={`${item.media_type}-${item.tmdb_id}`}
+                        key={`${item.type}-${item.tmdb_id}`}
                         item={item}
                       />
                     );
