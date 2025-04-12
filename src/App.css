@@ -2375,6 +2375,7 @@ input.error {
 
 .edit-profile {
   background: var(--primary-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .logout-button {

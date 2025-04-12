@@ -209,7 +209,7 @@ function MovieStatsModal({ title, type, onClose }) {
                   onClick={() => handleMovieClick(item.movie)}
                 >
                   <img
-                    src={item.movie.poster_preview_url || "/default-movie.jpg"}
+                    src={item.movie.poster_preview_url || "/default-movie.png"}
                     alt={item.movie.title}
                     className="movie-thumbnail"
                   />

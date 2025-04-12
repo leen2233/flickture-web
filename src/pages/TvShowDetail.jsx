@@ -327,7 +327,7 @@ function TvShowDetail() {
           <div className="movie-detail-main">
             <div className="movie-poster-large">
               <img
-                src={show.poster_url || "/default-movie.jpg"}
+                src={show.poster_url || "/default-movie.png"}
                 alt={show.name}
               />
             </div>
@@ -361,7 +361,7 @@ function TvShowDetail() {
                       >
                         <div className="director-image-container">
                           <img
-                            src={creator.profile_path || "/default-avatar.jpg"}
+                            src={creator.profile_path || "/default-avatar.png"}
                             alt={creator.name}
                             className="director-image"
                           />
@@ -507,7 +507,7 @@ function TvShowDetail() {
                   >
                     <div className="cast-image-container">
                       <img
-                        src={cast.person.profile_path || "/default-avatar.jpg"}
+                        src={cast.person.profile_path || "/default-avatar.png"}
                         alt={cast.person.name}
                         className="cast-image"
                       />

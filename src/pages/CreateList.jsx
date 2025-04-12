@@ -26,7 +26,9 @@ function MovieSearchModal({ isOpen, onClose, onSelect, selectedMovies }) {
 
     setIsLoading(true);
     try {
-      const response = await axiosClient.get(`/movies/search?query=${value}`);
+      const response = await axiosClient.get(
+        `/movies/search/multi/?query=${value}`
+      );
       setResults(response.data.results);
     } catch (error) {
       console.error("Search error:", error);
@@ -59,28 +61,6 @@ function MovieSearchModal({ isOpen, onClose, onSelect, selectedMovies }) {
         </div>
 
         <div className="search-results">
-          {selectedMovies.length > 0 && (
-            <div className="current-movies">
-              <h3>Current Movies</h3>
-              <div className="current-movies-grid">
-                {selectedMovies.map((movie) => (
-                  <div key={movie.id} className="current-movie">
-                    <img
-                      src={movie.poster_preview_url}
-                      alt={movie.title}
-                      className="movie-poster"
-                    />
-                    <div className="movie-info">
-                      <h4>{movie.title}</h4>
-                      <span>{movie.year}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="divider" />
-            </div>
-          )}
-
           {isLoading ? (
             <div className="modal-loading">
               <Loader className="spin" size={24} />
@@ -191,7 +171,7 @@ function CreateList({ isEditing }) {
               movies: list.movies.map((movie) => ({
                 ...movie,
                 id: movie.tmdb_id,
-                poster_preview_url: movie.poster_url,
+                poster_preview_url: movie.poster_preview_url,
               })),
             });
             setPreviews({
@@ -207,6 +187,10 @@ function CreateList({ isEditing }) {
       }
     }
   }, [isEditing, location.state, id, navigate]);
+
+  useEffect(() => {
+    console.log("formData", formData);
+  }, [formData]);
 
   const handleImageSelect = (type) => {
     const input = document.createElement("input");
@@ -248,7 +232,7 @@ function CreateList({ isEditing }) {
     }
     if (formData.movies.length === 0)
       newErrors.movies = "Add at least one movie";
-
+    console.log(newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -277,7 +261,9 @@ function CreateList({ isEditing }) {
       }
 
       // Map movies to include both tmdb_id and id for existing movies
-      const movieIds = formData.movies.map((movie) => movie.tmdb_id);
+      const movieIds = formData.movies.map((movie) => {
+        return { tmdb_id: movie.tmdb_id, type: movie.type };
+      });
       formDataToSend.append("movie_ids", JSON.stringify(movieIds));
 
       let response;
@@ -337,7 +323,7 @@ function CreateList({ isEditing }) {
             <Camera size={20} />
           </button>
           {errors.backdrop && (
-            <span className="error-message">{errors.backdrop}</span>
+            <span className="error-message">* {errors.backdrop}</span>
           )}
         </div>
 
@@ -356,13 +342,15 @@ function CreateList({ isEditing }) {
           )}
           <button
             type="button"
-            className="image-select-button"
+            className="image-select-button image-select-button-thumbnail"
             onClick={() => handleImageSelect("thumbnail")}
           >
             <Camera size={20} />
           </button>
           {errors.thumbnail && (
-            <span className="error-message">{errors.thumbnail}</span>
+            <span className="error-message thumbnail-error-message">
+              * {errors.thumbnail}
+            </span>
           )}
         </div>
 
@@ -380,7 +368,7 @@ function CreateList({ isEditing }) {
               placeholder="Enter a name for your list..."
             />
             {errors.name && (
-              <span className="error-message">{errors.name}</span>
+              <span className="error-message">* {errors.name}</span>
             )}
           </div>
 
@@ -400,7 +388,7 @@ function CreateList({ isEditing }) {
               rows={4}
             />
             {errors.description && (
-              <span className="error-message">{errors.description}</span>
+              <span className="error-message">* {errors.description}</span>
             )}
           </div>
 
@@ -454,7 +442,7 @@ function CreateList({ isEditing }) {
               </div>
             )}
             {errors.movies && (
-              <span className="error-message">{errors.movies}</span>
+              <span className="error-message">* {errors.movies}</span>
             )}
           </div>
 

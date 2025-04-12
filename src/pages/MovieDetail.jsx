@@ -46,7 +46,7 @@ function CollectionSection({ collection, collection_movies }) {
           >
             <div className="collection-movie-poster">
               <img
-                src={movie.poster_preview_url || "/default-movie.jpg"}
+                src={movie.poster_preview_url || "/default-movie.png"}
                 alt={movie.title}
               />
             </div>
@@ -372,7 +372,7 @@ function MovieDetail() {
           <div className="movie-detail-main">
             <div className="movie-poster-large">
               <img
-                src={movie.poster_url || "/default-movie.jpg"}
+                src={movie.poster_url || "/default-movie.png"}
                 alt={movie.title}
               />
             </div>
@@ -405,7 +405,7 @@ function MovieDetail() {
                       >
                         <div className="director-image-container">
                           <img
-                            src={director.profile_path || "/default-avatar.jpg"}
+                            src={director.profile_path || "/default-avatar.png"}
                             alt={director.name}
                             className="director-image"
                           />
@@ -561,7 +561,7 @@ function MovieDetail() {
                   >
                     <div className="cast-image-container">
                       <img
-                        src={cast.person.profile_path || "/default-avatar.jpg"}
+                        src={cast.person.profile_path || "/default-avatar.png"}
                         alt={cast.person.name}
                         className="cast-image"
                       />
@@ -597,7 +597,7 @@ function MovieDetail() {
                   >
                     <div className="list-thumbnail">
                       <img
-                        src={list.thumbnail || "/default-list.jpg"}
+                        src={list.thumbnail || "/default-list.png"}
                         alt={list.name}
                       />
                       <div className="list-creator">by {list.creator}</div>

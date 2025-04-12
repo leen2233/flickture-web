@@ -656,6 +656,7 @@
   border-radius: 16px;
   border: 1px solid var(--border-color);
   overflow: hidden;
+  margin-top: 70px;
 }
 
 /* Backdrop Section */
@@ -663,7 +664,7 @@
   position: relative;
   height: 360px;
   background: rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .backdrop-preview {
@@ -690,7 +691,6 @@
   height: 225px;
   margin: -75px auto 32px;
   border-radius: 12px;
-  overflow: hidden;
   border: 4px solid var(--background-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
@@ -730,6 +730,11 @@
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
   padding: 0;
+}
+
+.image-select-button-thumbnail {
+  right: 5px;
+  bottom: 5px;
 }
 
 .image-select-button svg {
@@ -1011,11 +1016,22 @@
   color: var(--text-secondary);
 }
 
+.empty-movies {
+  text-align: center;
+}
+
 /* Error Messages */
 .error-message {
   color: #f44336;
   font-size: 14px;
   margin-top: 4px;
+}
+
+.thumbnail-error-message {
+  text-align: center;
+  width: 130%;
+  display: block;
+  margin-left: -25px;
 }
 
 /* Mobile Responsive */

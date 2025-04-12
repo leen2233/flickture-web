@@ -158,7 +158,7 @@ function EditProfile() {
                 style={{
                   backgroundImage: preview.avatar
                     ? `url(${preview.avatar})`
-                    : "none",
+                    : "url(/default-avatar.png)",
                   border: preview.avatar
                     ? "none"
                     : "1px dashed var(--border-color)",

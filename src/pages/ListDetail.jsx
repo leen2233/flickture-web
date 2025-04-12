@@ -24,7 +24,9 @@ function MovieItem({ movie }) {
   useEffect(() => {
     const fetchMovieStatus = async () => {
       try {
-        const response = await axiosClient.get(`/movies/${movie.tmdb_id}`);
+        const response = await axiosClient.get(
+          `/movies/${movie.tmdb_id}/${movie.type}`
+        );
         setStatus(response.data.watchlist_status || "none");
         setIsInFavorites(response.data.is_favorite);
       } catch (error) {
@@ -48,10 +50,32 @@ function MovieItem({ movie }) {
   };
 
   return (
-    <div className="movie-card">
-      <Link to={`/movie/${movie.tmdb_id}`} className="movie-card-link">
-        <div className="movie-card-poster">
-          <img src={movie.poster_url} alt={movie.title} />
+    <Link to={`/movie/${movie.tmdb_id}`} className="movie-grid-item">
+      <div className="movie-poster">
+        <img
+          src={movie.poster_preview_url || "/default-movie.png"}
+          alt={movie.title}
+        />
+        {movie.is_favorite && (
+          <div className="movie-status favorite">
+            <Heart size={20} fill="var(--primary-color)" />
+          </div>
+        )}
+      </div>
+      <div className="movie-info-compact">
+        <h3>{movie.title}</h3>
+        <div className="movie-meta">
+          {movie.rating && (
+            <span className="rating">
+              <Star size={14} className="star-icon" />
+              {movie.rating.toFixed(1)}
+            </span>
+          )}
+          {movie.year && <span className="year">({movie.year})</span>}
+        </div>
+      </div>
+      {/* <div className="movie-card-poster">
+          <img src={movie.poster_preview_url} alt={movie.title} />
           <div className="movie-card-overlay">
             <div className="movie-card-stats">
               {movie.rating && (
@@ -73,9 +97,8 @@ function MovieItem({ movie }) {
           <div className="movie-card-meta">
             <span className="movie-year">{movie.year}</span>
           </div>
-        </div>
-      </Link>
-    </div>
+        </div> */}
+    </Link>
   );
 }
 
@@ -140,7 +163,6 @@ function ListDetail() {
           movies: list.movies.map((movie) => ({
             ...movie,
             id: movie.tmdb_id,
-            poster_preview_url: movie.poster_url,
           })),
         },
       },

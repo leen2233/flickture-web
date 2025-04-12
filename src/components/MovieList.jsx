@@ -32,7 +32,7 @@ function MovieList({ title, movies, icon: Icon, showStatus, onMovieClick }) {
             >
               <div className="movie-poster">
                 <img
-                  src={movie.poster_preview_url || "/default-movie.jpg"}
+                  src={movie.poster_preview_url || "/default-movie.png"}
                   alt={movie.title}
                 />
                 {movie.is_favorite && (

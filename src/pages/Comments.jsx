@@ -143,7 +143,7 @@ const CommentItem = ({
       <div className="response">
         <div className="response-header">
           <img
-            src={response.user.avatar || "/default-avatar.jpg"}
+            src={response.user.avatar || "/default-avatar.png"}
             alt={response.user.username}
             className="avatar"
           />
@@ -203,7 +203,7 @@ const CommentItem = ({
         <div className="comment-header">
           <div className="user-info">
             <img
-              src={user.avatar || "/default-avatar.jpg"}
+              src={user.avatar || "/default-avatar.png"}
               alt={user.username}
               className="avatar"
             />
