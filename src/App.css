@@ -1417,6 +1417,10 @@ input.error {
   overflow: hidden;
 }
 
+.search-media-card .media-info .overview {
+  height: 80px;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .search-form {

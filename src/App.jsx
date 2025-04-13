@@ -22,6 +22,7 @@ import "./styles/Lists.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TvShowDetail from "./pages/TvShowDetail";
+import SeasonDetails from "./pages/SeasonDetail";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -64,6 +65,7 @@ function AppRoutes() {
         <Route path="/search" element={<Search />} />
         <Route path="/:type/:tmdbId" element={<MovieDetail />} />
         <Route path="/:type/:movieId/comments" element={<Comments />} />
+        <Route path="/:type/:tmdbId/episodes/" element={<SeasonDetails />} />
         <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />

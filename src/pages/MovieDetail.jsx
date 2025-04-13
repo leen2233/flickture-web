@@ -7,9 +7,12 @@ import {
   Clock,
   Calendar,
   Plus,
+  ListIcon,
   Check,
   BookmarkPlus,
   BookmarkCheck,
+  Tv as TvIcon,
+  List as ListIco,
   Share2,
   Heart,
   ListPlus,
@@ -421,6 +424,23 @@ function MovieDetail() {
 
           {/* Metadata Section */}
           <div className="metadata-section">
+            {movie.type === "tv" && movie.season_number && (
+              <Link
+                to={`/${movie.type}/${tmdbId}/episodes`}
+                className="metadata-item"
+              >
+                <TvIcon size={20} className="metadata-icon" />
+                <span className="metadata-label">Season</span>
+                <span className="metadata-value">{movie.season_number}</span>
+              </Link>
+            )}
+            {movie.type === "tv" && movie.episode_number && (
+              <div className="metadata-item">
+                <ListIcon size={20} className="metadata-icon" />
+                <span className="metadata-label">Episode</span>
+                <span className="metadata-value">{movie.episode_number}</span>
+              </div>
+            )}
             <div className="metadata-item">
               <Calendar size={20} className="metadata-icon" />
               <span className="metadata-label">Year</span>

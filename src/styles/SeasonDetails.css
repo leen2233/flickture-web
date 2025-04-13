@@ -1,0 +1,124 @@
+.episode-container {
+  width: 100%;
+}
+
+.season-detail-page .seasons-container {
+  margin: auto;
+  margin-top: 30px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.season-detail-page .seasons-container .season {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.season-detail-page .seasons-container .season.active {
+  background-color: var(--primary-color);
+}
+
+.episodes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  margin-bottom: 100px;
+}
+
+.episodes-table {
+  margin: auto;
+  width: 80%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--card-background);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.episodes-table thead tr {
+  height: 50px;
+}
+
+.episodes-table th {
+  text-align: left;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.episodes-table tbody tr {
+  height: 60px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+}
+
+.episodes-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.episodes-table tbody tr:hover {
+  background-color: var(--hover-color);
+}
+
+.episodes-table tbody tr.active {
+  background-color: var(--primary-color, #e50914);
+  border-radius: 50%;
+}
+
+.episodes-table td {
+  padding: 1rem 1.5rem;
+  color: white;
+}
+
+.episode-number {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  width: 80px;
+}
+
+.episode-title {
+  font-weight: 500;
+}
+
+.episode-rating {
+  width: 120px;
+}
+
+.rating-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.rating-value {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rating-max {
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 2px;
+}
+
+.episode-name-container {
+  margin: 0;
+  margin-top: 80px;
+}
