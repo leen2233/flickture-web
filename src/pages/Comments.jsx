@@ -18,6 +18,8 @@ import {
 import axiosClient from "../utils/axios";
 import { toast } from "react-toastify";
 import "../styles/Comments.css";
+import { useAuth } from "../contexts/AuthContext";
+import AuthRequiredPopup from "../components/AuthRequiredPopup";
 
 const RatingStars = ({
   rating,
@@ -353,6 +355,8 @@ function Comments() {
   const [selectedRating, setSelectedRating] = useState(0);
   const [sortBy, setSortBy] = useState("date");
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const { currentUser } = useAuth();
   const observer = useRef();
 
   const lastCommentRef = useCallback(
@@ -390,6 +394,14 @@ function Comments() {
       setComments((prev) => prev.filter((comment) => comment.id !== id));
     } catch (error) {
       console.error("Failed to delete comment:", error);
+    }
+  };
+
+  const handleShowCommentFormClick = () => {
+    if (!currentUser) {
+      setShowAuthPopup(true);
+    } else {
+      setShowCommentForm(!showCommentForm);
     }
   };
 
@@ -475,7 +487,7 @@ function Comments() {
         <div className="actions-bar">
           <button
             className={`write-review ${showCommentForm ? "active" : ""}`}
-            onClick={() => setShowCommentForm(!showCommentForm)}
+            onClick={handleShowCommentFormClick}
           >
             <PenSquare size={20} />
             <span>{showCommentForm ? "Close Review" : "Write a Review"}</span>
@@ -545,6 +557,10 @@ function Comments() {
           )}
         </div>
       </div>
+      <AuthRequiredPopup
+        isOpen={showAuthPopup}
+        onClose={() => setShowAuthPopup(false)}
+      />
     </div>
   );
 }

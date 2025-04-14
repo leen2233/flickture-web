@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Heart,
   Plus,
@@ -12,6 +12,8 @@ import {
   Loader,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
+import { useAuth } from "../contexts/AuthContext";
+import AuthRequiredPopup from "../components/AuthRequiredPopup";
 
 function ListCard({ list }) {
   const [isLiked, setIsLiked] = useState(list.is_liked);
@@ -100,6 +102,9 @@ function Lists() {
     recent: [],
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,6 +146,14 @@ function Lists() {
     fetchData();
   }, [activeTab]);
 
+  const handleCreateList = () => {
+    if (!currentUser) {
+      setShowAuthPopup(true);
+    } else {
+      navigate("/lists/create");
+    }
+  };
+
   const tabs = [
     { id: "featured", label: "Featured", icon: TrendingUp },
     { id: "myLists", label: "My Lists", icon: Bookmark },
@@ -169,13 +182,12 @@ function Lists() {
               );
             })}
           </div>
-          <Link to="/lists/create" className="create-list-button">
+          <button onClick={handleCreateList} className="create-list-button">
             <Plus size={18} />
             <span>Create List</span>
-          </Link>
+          </button>
         </div>
       </div>
-
       <div className="lists-page-content">
         {isLoading ? (
           <div className="lists-loading">
@@ -238,6 +250,10 @@ function Lists() {
           </>
         )}
       </div>
+      <AuthRequiredPopup
+        isOpen={showAuthPopup}
+        onClose={() => setShowAuthPopup(false)}
+      />
     </div>
   );
 }

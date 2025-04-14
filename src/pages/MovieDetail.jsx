@@ -25,6 +25,8 @@ import axiosClient from "../utils/axios";
 import MovieDetailSkeleton from "../components/skeletons/MovieDetailSkeleton";
 import { RatingStars } from "../components/RatingStars";
 import { toast } from "react-toastify";
+import { useAuth } from "../contexts/AuthContext";
+import AuthRequiredPopup from "../components/AuthRequiredPopup";
 
 function CollectionSection({ collection, collection_movies }) {
   const navigate = useNavigate();
@@ -42,20 +44,53 @@ function CollectionSection({ collection, collection_movies }) {
       </div>
       <div className="collection-movies">
         {collection_movies?.map((movie) => (
-          <Link
+          <div
             key={movie.tmdb_id}
-            to={`/movie/${movie.tmdb_id}`}
-            className="collection-movie"
+            className="movie-grid-item collection-movie-item"
+            onClick={() =>
+              navigate(`/movie/${movie.tmdb_id}`, {
+                state: { from: "search" },
+              })
+            }
           >
-            <div className="collection-movie-poster">
+            <div className="movie-poster">
               <img
                 src={movie.poster_preview_url || "/default-movie.png"}
                 alt={movie.title}
               />
+              {movie.is_favorite && (
+                <div className="movie-status favorite">
+                  <Heart size={20} fill="var(--primary-color)" />
+                </div>
+              )}
             </div>
-            <p className="collection-movie-title">{movie.title}</p>
-            <p className="collection-movie-year">{movie.year}</p>
-          </Link>
+            <div className="movie-info-compact profile-movie-info-compact">
+              <h3>{movie.title}</h3>
+              <div className="movie-meta">
+                {movie.rating && (
+                  <span className="rating">
+                    <Star size={14} className="star-icon" />
+                    {movie.rating.toFixed(1)}
+                  </span>
+                )}
+                {movie.year && <span className="year">({movie.year})</span>}
+              </div>
+            </div>
+          </div>
+          // <Link
+          //   key={movie.tmdb_id}
+          //   to={`/movie/${movie.tmdb_id}`}
+          //   className="collection-movie"
+          // >
+          //   <div className="collection-movie-poster">
+          //     <img
+          //       src={movie.poster_preview_url || "/default-movie.png"}
+          //       alt={movie.title}
+          //     />
+          //   </div>
+          //   <p className="collection-movie-title">{movie.title}</p>
+          //   <p className="collection-movie-year">{movie.year}</p>
+          // </Link>
         ))}
       </div>
     </div>
@@ -133,6 +168,8 @@ function MovieDetail() {
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     let isMounted = true;
@@ -170,6 +207,11 @@ function MovieDetail() {
   const handleWatchlistToggle = async () => {
     if (isLoadingWatchlist) return;
 
+    if (!currentUser) {
+      setShowAuthPopup(true);
+      return;
+    }
+
     try {
       setIsLoadingWatchlist(true);
       setError(null);
@@ -197,6 +239,11 @@ function MovieDetail() {
 
   const handleWatchedToggle = async () => {
     if (isLoadingWatchlist) return;
+
+    if (!currentUser) {
+      setShowAuthPopup(true);
+      return;
+    }
 
     if (movie.watchlist_status !== "watched") {
       try {
@@ -241,6 +288,11 @@ function MovieDetail() {
 
   const handleFavoriteToggle = async () => {
     if (isLoadingFavorite) return;
+
+    if (!currentUser) {
+      setShowAuthPopup(true);
+      return;
+    }
 
     try {
       setIsLoadingFavorite(true);
@@ -299,6 +351,10 @@ function MovieDetail() {
   };
 
   const handleCommentSubmit = async (content, rating) => {
+    if (!currentUser) {
+      setShowAuthPopup(true);
+      return;
+    }
     try {
       setIsSubmittingComment(true);
       setError(null);
@@ -637,6 +693,10 @@ function MovieDetail() {
         onClose={() => setShowCommentModal(false)}
         onSubmit={handleCommentSubmit}
         isSubmitting={isSubmittingComment}
+      />
+      <AuthRequiredPopup
+        isOpen={showAuthPopup}
+        onClose={() => setShowAuthPopup(false)}
       />
     </div>
   );

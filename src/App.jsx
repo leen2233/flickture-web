@@ -15,6 +15,7 @@ import Lists from "./pages/Lists";
 import ListDetail from "./pages/ListDetail";
 import CreateList from "./pages/CreateList";
 import PersonDetail from "./pages/PersonDetail";
+import CollectionDetail from "./pages/CollectionDetail";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 import "./App.css";
@@ -89,6 +90,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="collection/:id" element={<CollectionDetail />} />
       </Route>
     </Routes>
   );
