@@ -95,10 +95,13 @@ axiosClient.interceptors.response.use(
 
     // Show error notification
     let errorMessage = "An error occurred. Please try again.";
-
     if (error.response) {
-      // Server responded with error
-      if (error.response.data?.detail) {
+      console.log(error.response.status);
+      if (error.response.status === 404) {
+        errorMessage = "Requested content couldn't found";
+      } else if (error.response.status === 500) {
+        errorMessage = "Internal Server Error";
+      } else if (error.response.data?.detail) {
         errorMessage = error.response.data.detail;
       } else if (error.response.data?.message) {
         errorMessage = error.response.data.message;

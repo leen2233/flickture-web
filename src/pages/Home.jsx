@@ -89,14 +89,17 @@ function ActivityCard({ activity }) {
     <div className="activity-card">
       <div className="activity-content">
         {activity.user && (
-          <div className="activity-user">
+          <Link
+            className="activity-user"
+            to={`/users/${activity.user.username}`}
+          >
             <img
               src={activity.user.avatar}
               alt={activity.user.name}
               className="user-avatar"
             />
             <span className="user-name">{activity.user.name}</span>
-          </div>
+          </Link>
         )}
 
         {(activity.type === "like" ||
@@ -142,14 +145,19 @@ function ActivityCard({ activity }) {
         )}
 
         {activity.type === "list_create" && (
-          <Link to={`/lists/${activity.list.id}`} className="list-preview">
+          <Link to={`/lists/${activity.list.id}`} className="list-preview-card">
             <div className="movie-mini-container">
               <div className="movie-poster-wrapper">
                 <img src={activity.list.thumbnail} className="movie-poster" />
               </div>
-              <div className="movie-mini-info">
-                <h3>{activity.list.title}</h3>
-                <div className="movie-meta-info">
+              <div className="list-mini-info">
+                <div>
+                  <h3>{activity.list.title}</h3>
+                  <span className="list-description">
+                    {activity.list.description}
+                  </span>
+                </div>
+                <div className="list-meta-info">
                   <span className="movie-runtime">
                     <Film size={14} />
                     {activity.list.movie_count} movies

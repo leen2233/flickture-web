@@ -22,8 +22,8 @@ import "./App.css";
 import "./styles/Lists.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TvShowDetail from "./pages/TvShowDetail";
 import SeasonDetails from "./pages/SeasonDetail";
+import PublicProfile from "./pages/PublicProfile";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -47,6 +47,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/users/:username" element={<PublicProfile />} />
         <Route
           path="/profile"
           element={

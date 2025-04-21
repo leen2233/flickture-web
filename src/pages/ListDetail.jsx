@@ -50,7 +50,7 @@ function MovieItem({ movie }) {
   };
 
   return (
-    <Link to={`/movie/${movie.tmdb_id}`} className="movie-grid-item">
+    <Link to={`/${movie.type}/${movie.tmdb_id}`} className="movie-grid-item">
       <div className="movie-poster">
         <img
           src={movie.poster_preview_url || "/default-movie.png"}

@@ -184,6 +184,19 @@
   font-weight: 600;
 }
 
+.home-container .list-preview-card {
+  background: var(--background-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.home-container .list-preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
 .home-container .list-info {
   background-color: var(--background-secondary);
   border-radius: 12px;
@@ -203,14 +216,27 @@
   vertical-align: middle;
 }
 
-.home-container .list-info .movie-count {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+.home-container .list-mini-info {
+  flex: 1;
+  padding: 0.75rem 1rem 0.75rem 0;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  min-width: 0;
+  justify-content: space-between;
+}
+
+.home-container .list-mini-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-container .list-meta-info {
+  position: relative;
+  bottom: 0;
 }
 
 /* Movie Preview Card */
