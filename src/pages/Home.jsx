@@ -20,136 +20,10 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// Sample data - Replace with API data later
-const sampleActivities = [
-  {
-    id: 1,
-    type: "like",
-    user: {
-      id: 1,
-      name: "Sarah Johnson",
-      avatar: "/default-avatar.png",
-    },
-    movie: {
-      id: 1,
-      title: "Inception",
-      poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
-      year: "2010",
-      genres: ["Action", "Sci-Fi", "Thriller"],
-      overview:
-        'Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: "inception".',
-      runtime: 148,
-      vote_count: 32476,
-      rating: 8.8,
-    },
-    timestamp: "2025-04-17T10:30:00Z",
-  },
-  {
-    id: 2,
-    type: "watch",
-    user: {
-      id: 2,
-      name: "Mike Chen",
-      avatar: "/default-avatar.png",
-    },
-    movie: {
-      id: 2,
-      title: "The Shawshank Redemption",
-      poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-      year: "1994",
-      genres: ["Drama", "Crime"],
-      overview:
-        "Framed in the 1940s for the double murder of his wife and her lover, Andy Dufresne begins a new life at Shawshank prison, where he puts his accounting skills to work for an amoral warden.",
-      runtime: 142,
-      vote_count: 24596,
-      rating: 9.3,
-    },
-    rating: 4.5,
-    timestamp: "2025-04-17T09:15:00Z",
-  },
-  {
-    id: 3,
-    type: "comment",
-    user: {
-      id: 3,
-      name: "Emily Wong",
-      avatar: "/default-avatar.png",
-    },
-    movie: {
-      id: 3,
-      title: "Interstellar",
-      poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-      year: "2014",
-      genres: ["Adventure", "Drama", "Sci-Fi"],
-      overview:
-        "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-      runtime: 169,
-      vote_count: 31854,
-      rating: 8.6,
-    },
-    comment:
-      "Mind-blowing visuals and an emotional story. The docking scene was intense! 🚀",
-    timestamp: "2025-04-17T08:45:00Z",
-  },
-  {
-    id: 4,
-    type: "new_episode",
-    user: null,
-    show: {
-      id: 4,
-      title: "The Last of Us",
-      poster: "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
-      year: "2023",
-      genres: ["Drama", "Action", "Adventure"],
-      overview:
-        "Twenty years after modern civilization has been destroyed, Joel, a hardened survivor, is hired to smuggle Ellie, a 14-year-old girl, out of an oppressive quarantine zone.",
-      rating: 8.7,
-    },
-    episode: {
-      season: 2,
-      episode: 5,
-      title: "Endure and Survive",
-    },
-    timestamp: "2025-04-17T08:00:00Z",
-  },
-  {
-    id: 5,
-    type: "list_create",
-    user: {
-      id: 4,
-      name: "Alex Turner",
-      avatar: "/default-avatar.png",
-    },
-    list: {
-      id: 1,
-      title: "Best Sci-Fi Movies of All Time",
-      movieCount: 15,
-    },
-    timestamp: "2025-04-17T07:30:00Z",
-  },
-  {
-    id: 6,
-    type: "new_movie",
-    movie: {
-      id: 6,
-      title: "Dune: Part Two",
-      poster: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-      year: "2024",
-      genres: ["Science Fiction", "Adventure", "Drama"],
-      overview:
-        "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
-      runtime: 166,
-      vote_count: 2887,
-      rating: 8.4,
-    },
-    timestamp: "2025-04-17T06:00:00Z",
-  },
-];
-
 function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
   const now = new Date();
-  const diff = date - now;
+  const diff = now - date;
 
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
@@ -197,7 +71,7 @@ function MoviePreview({ movie, type = "movie" }) {
           </div>
           {movie.genres && (
             <div className="movie-genres">
-              {movie.genres.slice(0, 2).map((genre, index) => (
+              {movie.genres.map((genre, index) => (
                 <span key={index} className="genre-tag">
                   {genre}
                 </span>
@@ -247,7 +121,6 @@ function ActivityCard({ activity }) {
         {activity.type === "comment" && (
           <>
             <div className="comment-box">
-              <MessageCircle size={16} className="comment-icon" />
               <p className="comment-text">{activity.comment}</p>
             </div>
           </>
@@ -270,16 +143,30 @@ function ActivityCard({ activity }) {
 
         {activity.type === "list_create" && (
           <Link to={`/lists/${activity.list.id}`} className="list-preview">
-            <div className="list-info">
-              <h3>
-                <ListPlus size={18} className="list-icon" />
-                {activity.list.title}
-              </h3>
+            <div className="movie-mini-container">
+              <div className="movie-poster-wrapper">
+                <img src={activity.list.thumbnail} className="movie-poster" />
+              </div>
+              <div className="movie-mini-info">
+                <h3>{activity.list.title}</h3>
+                <div className="movie-meta-info">
+                  <span className="movie-runtime">
+                    <Film size={14} />
+                    {activity.list.movie_count} movies
+                  </span>
+                </div>
+              </div>
+            </div>
+            {/* <div className="list-info">
+              <div className="list-title">
+                <ListPlus size={18} className="list-icon" />{" "}
+                <h3>{activity.list.title}</h3>
+              </div>
               <span className="movie-count">
                 <Film size={14} />
                 {activity.list.movieCount} movies
               </span>
-            </div>
+            </div> */}
           </Link>
         )}
       </div>
@@ -361,27 +248,39 @@ function Home() {
   const [activeTab, setActiveTab] = useState("following");
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
+    // Reset state when tab changes
+    setActivities([]);
+    setPage(1);
+    setHasMore(true);
+  }, [activeTab]);
+
+  useEffect(() => {
     const fetchActivities = async () => {
+      if (!hasMore) return;
+
       setLoading(true);
       try {
-        // Replace with actual API calls later
-        if (activeTab === "following") {
-          // Filter activities for followed users and shows
-          const followingActivities = sampleActivities.filter((activity) => {
-            // This is a placeholder - replace with actual following logic
-            return (
-              activity.user &&
-              (activity.user.id === 1 || activity.user.id === 2)
-            );
-          });
-          setActivities(followingActivities);
+        const endpoint =
+          activeTab === "following" ? "/feed/following/" : "/feed/";
+        const response = await axiosClient.get(endpoint, {
+          params: {
+            page,
+          },
+        });
+
+        if (page === 1) {
+          setActivities(response.data.results);
         } else {
-          // Show all activities for global feed
-          setActivities(sampleActivities);
+          setActivities((prev) => [...prev, ...response.data.results]);
         }
+
+        // Update hasMore based on whether there's a next page
+        setHasMore(!!response.data.next);
       } catch (error) {
         console.error("Error fetching activities:", error);
       } finally {
@@ -390,10 +289,16 @@ function Home() {
     };
 
     fetchActivities();
-  }, [activeTab]);
+  }, [activeTab, page]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+  };
+
+  const loadMore = () => {
+    if (!loading && hasMore) {
+      setPage((prev) => prev + 1);
+    }
   };
 
   return (
@@ -422,17 +327,33 @@ function Home() {
         </div>
 
         <div className="activities-feed">
-          {loading ? (
-            <div className="loading-more">
-              <Loader className="spin" size={24} />
-              <span>Loading activities...</span>
-            </div>
-          ) : activities.length > 0 ? (
+          {activities.length > 0 ? (
             <>
               {activities.map((activity) => (
                 <ActivityCard key={activity.id} activity={activity} />
               ))}
+              {hasMore && (
+                <button
+                  className="load-more-button"
+                  onClick={loadMore}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader className="spin" size={24} />
+                      <span>Loading more...</span>
+                    </>
+                  ) : (
+                    "Load More"
+                  )}
+                </button>
+              )}
             </>
+          ) : loading ? (
+            <div className="loading-more">
+              <Loader className="spin" size={24} />
+              <span>Loading activities...</span>
+            </div>
           ) : (
             <EmptyFeedMessage isFollowing={activeTab === "following"} />
           )}
