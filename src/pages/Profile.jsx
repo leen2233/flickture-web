@@ -185,13 +185,11 @@ function Profile() {
                 <span>Edit Profile</span>
               </button>
               <button
-                className="logout-button"
-                onClick={() => {
-                  logout();
-                }}
+                className="settings-button"
+                onClick={() => navigate("/settings")}
               >
                 <Settings size={16} />
-                <span>Logout</span>
+                <span>Settings</span>
               </button>
             </div>
             <div className="profile-avatar-wrapper">

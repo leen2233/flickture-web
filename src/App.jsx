@@ -24,6 +24,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SeasonDetails from "./pages/SeasonDetail";
 import PublicProfile from "./pages/PublicProfile";
+import Settings from "./pages/Settings";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -61,6 +62,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
             </ProtectedRoute>
           }
         />

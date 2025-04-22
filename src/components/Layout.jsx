@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Home as HomeIcon, Search, List, User } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -20,6 +20,9 @@ function LeftSidebar() {
 
   return (
     <div className="left-sidebar">
+      <Link to={"/"}>
+        <img src="/logo-landscape.png" className="landscape-logo" />
+      </Link>
       <div className="nav-items">
         <NavItem to="/" icon={HomeIcon} label="Home" />
         <NavItem to="/search" icon={Search} label="Search" />
