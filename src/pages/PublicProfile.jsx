@@ -145,14 +145,13 @@ function PublicProfile() {
 
   const handleFollow = async () => {
     try {
-      if (isFollowing) {
-        await axiosClient.delete(`/users/${username}/follow/`);
-        setIsFollowing(false);
-        setFollowerCount((prev) => prev - 1);
-      } else {
-        await axiosClient.post(`/users/${username}/follow/`);
+      const response = await axiosClient.post(`/auth/user/${username}/follow/`);
+      if (response.data.status === "followed") {
         setIsFollowing(true);
         setFollowerCount((prev) => prev + 1);
+      } else if (response.data.status === "unfollowed") {
+        setIsFollowing(false);
+        setFollowerCount((prev) => prev - 1);
       }
     } catch (error) {
       console.error("Failed to update follow status:", error);

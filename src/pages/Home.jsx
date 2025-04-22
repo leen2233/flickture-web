@@ -269,12 +269,12 @@ function Home() {
 
   useEffect(() => {
     const fetchActivities = async () => {
-      if (!hasMore) return;
+      // if (!hasMore) return;
 
       setLoading(true);
       try {
         const endpoint =
-          activeTab === "following" ? "/feed/following/" : "/feed/";
+          activeTab === "following" ? "/feed/?following=true" : "/feed/";
         const response = await axiosClient.get(endpoint, {
           params: {
             page,
