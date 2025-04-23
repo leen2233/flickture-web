@@ -18,6 +18,7 @@ import {
   ChevronRight,
   MessageCircle,
   Loader2,
+  Copy,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 import MovieDetailSkeleton from "../components/skeletons/MovieDetailSkeleton";
@@ -36,6 +37,7 @@ function SeasonDetails() {
   const [currentEpisode, setCurrentEpisode] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -113,6 +115,10 @@ function SeasonDetails() {
         text: `Check out ${movie.title} on Flickture!`,
         url: window.location.href,
       });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
     }
   };
 
@@ -177,8 +183,8 @@ function SeasonDetails() {
             <span>{getBackButtonText()}</span>
           </button>
           <button className="nav-button" onClick={handleShare}>
-            <Share2 size={20} />
-            <span>Share</span>
+            {copied ? <Copy size={20} /> : <Share2 size={20} />}
+            <span>{copied ? "Copied!" : "Share"}</span>
           </button>
         </div>
       </div>

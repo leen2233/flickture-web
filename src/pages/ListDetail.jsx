@@ -13,6 +13,7 @@ import {
   Share2,
   Trash2,
   Edit2,
+  Copy,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 import { useAuth } from "../contexts/AuthContext";
@@ -110,6 +111,7 @@ function ListDetail() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchList = async () => {
@@ -169,6 +171,20 @@ function ListDetail() {
     });
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: list.name,
+        text: `Check out ${list.name} on Flickture!`,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="lists-loading">
@@ -221,20 +237,9 @@ function ListDetail() {
                   </button>
                 </>
               )}
-              <button
-                className="nav-button"
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: list.name,
-                      text: `Check out ${list.name} on Flickture!`,
-                      url: window.location.href,
-                    });
-                  }
-                }}
-              >
-                <Share2 size={20} />
-                <span>Share</span>
+              <button className="nav-button" onClick={handleShare}>
+                {copied ? <Copy size={20} /> : <Share2 size={20} />}
+                <span>{copied ? "Copied!" : "Share"}</span>
               </button>
             </div>
           </div>

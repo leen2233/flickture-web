@@ -20,6 +20,7 @@ import {
   ChevronRight,
   MessageCircle,
   Loader2,
+  Copy,
 } from "lucide-react";
 import axiosClient from "../utils/axios";
 import MovieDetailSkeleton from "../components/skeletons/MovieDetailSkeleton";
@@ -77,20 +78,6 @@ function CollectionSection({ collection, collection_movies }) {
               </div>
             </div>
           </div>
-          // <Link
-          //   key={movie.tmdb_id}
-          //   to={`/movie/${movie.tmdb_id}`}
-          //   className="collection-movie"
-          // >
-          //   <div className="collection-movie-poster">
-          //     <img
-          //       src={movie.poster_preview_url || "/default-movie.png"}
-          //       alt={movie.title}
-          //     />
-          //   </div>
-          //   <p className="collection-movie-title">{movie.title}</p>
-          //   <p className="collection-movie-year">{movie.year}</p>
-          // </Link>
         ))}
       </div>
     </div>
@@ -169,6 +156,7 @@ function MovieDetail() {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -230,7 +218,6 @@ function MovieDetail() {
       const errorMessage =
         error.response?.data?.message ||
         "Failed to update watchlist. Please try again.";
-      // setError(errorMessage);
       console.error("Watchlist error:", error);
     } finally {
       setIsLoadingWatchlist(false);
@@ -250,14 +237,12 @@ function MovieDetail() {
         setIsLoadingWatchlist(true);
         setError(null);
 
-        // Mark as watched first
         await axiosClient.patch(`/watchlist/${tmdbId}/`, {
           status: "watched",
         });
 
         setMovie((prev) => ({ ...prev, watchlist_status: "watched" }));
 
-        // Then show review modal
         setShowCommentModal(true);
       } catch (error) {
         const errorMessage =
@@ -324,10 +309,13 @@ function MovieDetail() {
         text: `Check out ${movie.title} on Flickture!`,
         url: window.location.href,
       });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  // Get back button text based on source
   const getBackButtonText = () => {
     switch (location.state?.from) {
       case "search":
@@ -339,7 +327,6 @@ function MovieDetail() {
     }
   };
 
-  // Handle back navigation
   const handleBack = () => {
     if (location.state?.from === "search" && location.state?.search) {
       navigate(`/search${location.state.search}`);
@@ -359,7 +346,6 @@ function MovieDetail() {
       setIsSubmittingComment(true);
       setError(null);
 
-      // Only post the comment
       await axiosClient.post(`/movies/${tmdbId}/${movie.type}/comments/`, {
         content,
         rating,
@@ -407,7 +393,6 @@ function MovieDetail() {
 
   return (
     <div className="movie-detail-container">
-      {/* Backdrop Image */}
       <div
         className="movie-backdrop"
         style={{ backgroundImage: `url(${movie.backdrop_url})` }}
@@ -419,15 +404,14 @@ function MovieDetail() {
             <span>{getBackButtonText()}</span>
           </button>
           <button className="nav-button" onClick={handleShare}>
-            <Share2 size={20} />
-            <span>Share</span>
+            {copied ? <Copy size={20} /> : <Share2 size={20} />}
+            <span>{copied ? "Copied!" : "Share"}</span>
           </button>
         </div>
       </div>
 
       <div className="content-container">
         <div className="movie-detail-content">
-          {/* Poster and Title */}
           <div className="movie-detail-main">
             <div className="movie-poster-large">
               <img
@@ -451,7 +435,6 @@ function MovieDetail() {
                   ))}
                 </div>
               )}
-              {/* Add Directors Section */}
               {movie.directors && movie.directors.length > 0 && (
                 <div className="directors-section">
                   <h3>Directed by</h3>
@@ -478,7 +461,6 @@ function MovieDetail() {
             </div>
           </div>
 
-          {/* Metadata Section */}
           <div className="metadata-section">
             {movie.type === "tv" && movie.season_number && (
               <Link
@@ -531,7 +513,6 @@ function MovieDetail() {
             </Link>
           </div>
 
-          {/* Action Buttons */}
           <div className="action-buttons">
             <div className="action-row">
               {movie.watchlist_status !== "watched" ? (
@@ -618,7 +599,6 @@ function MovieDetail() {
             )}
           </div>
 
-          {/* Cast Section */}
           {movie.cast_preview && movie.cast_preview.length > 0 && (
             <div className="cast-section">
               <div className="cast-header">
@@ -650,7 +630,6 @@ function MovieDetail() {
             </div>
           )}
 
-          {/* Collection Section */}
           {movie.collection && (
             <CollectionSection
               collection={movie.collection}
@@ -658,7 +637,6 @@ function MovieDetail() {
             />
           )}
 
-          {/* Lists Section */}
           {movie.lists && movie.lists.length > 0 && (
             <div className="lists-section">
               <div className="lists-header">
