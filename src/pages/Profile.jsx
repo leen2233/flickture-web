@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Edit2,
   Settings,
@@ -118,7 +118,7 @@ function MovieList({
 
 function Profile() {
   const navigate = useNavigate();
-  const { currentUser, updateUser, logout } = useAuth();
+  const { currentUser, checkAuth } = useAuth();
   const [showWatchedModal, setShowWatchedModal] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
@@ -131,6 +131,13 @@ function Profile() {
       console.error("Failed to fetch watched movies:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      await checkAuth();
+    };
+    fetchUser();
+  }, []);
 
   if (!currentUser) {
     return (

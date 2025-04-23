@@ -117,6 +117,7 @@
   text-decoration: none;
   color: var(--text-color);
   transition: all 0.2s ease;
+  width: 200px;
 }
 
 .list-card:hover {
@@ -127,7 +128,6 @@
 
 .list-card-thumbnail {
   position: relative;
-  aspect-ratio: 16/9;
 }
 
 .list-card-thumbnail img {

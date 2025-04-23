@@ -61,6 +61,7 @@ function Register() {
       // Store token and auth status
       localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
+      await checkAuth();
 
       // Redirect to edit profile instead of home
       navigate("/edit-profile");

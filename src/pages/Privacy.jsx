@@ -2,7 +2,7 @@ function Privacy() {
   return (
     <div className="content-container">
       <h1>Privacy Policy</h1>
-      <div className="content-card">
+      <div className="content-card" style={{ padding: "10px 30px" }}>
         <p>Last updated: 2024</p>
 
         <h2>Information We Collect</h2>

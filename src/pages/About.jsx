@@ -2,7 +2,7 @@ function About() {
   return (
     <div className="content-container">
       <h1>About Flickture</h1>
-      <div className="content-card">
+      <div className="content-card" style={{ padding: "10px 30px" }}>
         <p>
           Flickture is a social platform for movie enthusiasts to discover,
           track, and share their favorite films. Our mission is to create a

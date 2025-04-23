@@ -90,6 +90,7 @@ function EditProfile() {
           "Content-Type": "multipart/form-data",
         },
       });
+      
       navigate("/profile");
     } catch (error) {
       const errorData = error.response?.data || {};

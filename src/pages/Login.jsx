@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../utils/axios";
+import { useAuth } from "../contexts/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const { checkAuth } = useAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -44,6 +46,7 @@ function Login() {
       // Store token and auth status
       localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
+      await checkAuth();
 
       navigate("/");
     } catch (error) {
