@@ -13,6 +13,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import { formatDistanceToNow } from "date-fns";
 import MovieStatsModal from "../components/MovieStatsModal";
+import FollowersList from "../components/FollowersList";
 import { useAuth } from "../contexts/AuthContext";
 
 function StatBox({ label, value, onClick }) {
@@ -72,29 +73,6 @@ function MovieCard({ item }) {
       </div>
     </div>
   );
-  // return (
-  //   <div
-  //     className="movie-card"
-  //     onClick={() =>
-  //       navigate(`/movie/${movie.tmdb_id}`, {
-  //         state: { from: "profile" },
-  //       })
-  //     }
-  //   >
-  //     <div className="movie-poster">
-  //       <img src={movie.poster_url} alt={movie.title} />
-  //       <div className="movie-info-overlay">
-  //         <div className="movie-rating">★ {movie.rating.toFixed(1)}</div>
-  //         <div className="movie-info-bottom">
-  //           <h3 className="movie-title">{movie.title}</h3>
-  //           <span className="movie-updated">
-  //             {formatDistanceToNow(new Date(updated_at))} ago
-  //           </span>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }
 
 function MovieList({
@@ -142,19 +120,15 @@ function Profile() {
   const navigate = useNavigate();
   const { currentUser, updateUser, logout } = useAuth();
   const [showWatchedModal, setShowWatchedModal] = useState(false);
-  const [watchedMovies, setWatchedMovies] = useState([]);
-  const [isLoadingWatched, setIsLoadingWatched] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
 
   const handleWatchedClick = async () => {
-    setIsLoadingWatched(true);
     try {
       const response = await axiosClient.get("/watchlist/?status=watched");
-      setWatchedMovies(response.data);
       setShowWatchedModal(true);
     } catch (error) {
       console.error("Failed to fetch watched movies:", error);
-    } finally {
-      setIsLoadingWatched(false);
     }
   };
 
@@ -213,18 +187,18 @@ function Profile() {
             <div className="stats-row">
               <StatBox
                 label="Movies Watched"
-                value={currentUser.stats.movies_watched}
+                value={currentUser.movies_watched}
                 onClick={handleWatchedClick}
               />
               <StatBox
                 label="Following"
-                value={currentUser.stats.following}
-                onClick={() => {}}
+                value={currentUser.following_count}
+                onClick={() => setShowFollowingModal(true)}
               />
               <StatBox
                 label="Followers"
-                value={currentUser.stats.followers}
-                onClick={() => {}}
+                value={currentUser.follower_count}
+                onClick={() => setShowFollowersModal(true)}
               />
             </div>
           </div>
@@ -234,7 +208,7 @@ function Profile() {
           <MovieList
             title="Recently Watched"
             movies={currentUser.recently_watched}
-            count={currentUser.stats.movies_watched}
+            count={currentUser.movies_watched}
             type="recently-watched"
             icon={Clock}
             emptyMessage="No movies watched yet. Start watching!"
@@ -263,6 +237,24 @@ function Profile() {
           title="Movies Watched"
           type="watched"
           onClose={() => setShowWatchedModal(false)}
+        />
+      )}
+
+      {showFollowersModal && (
+        <FollowersList
+          title="Followers"
+          username={currentUser.username}
+          type="followers"
+          onClose={() => setShowFollowersModal(false)}
+        />
+      )}
+
+      {showFollowingModal && (
+        <FollowersList
+          title="Following"
+          username={currentUser.username}
+          type="following"
+          onClose={() => setShowFollowingModal(false)}
         />
       )}
     </div>

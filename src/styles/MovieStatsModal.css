@@ -38,6 +38,12 @@
   font-size: 1.5rem;
 }
 
+.modal-title {
+  display: flex;
+  gap: 20px;
+  align-items: last baseline;
+}
+
 .close-button {
   background: none;
   border: none;
@@ -105,12 +111,23 @@
   font-weight: 500;
 }
 
+.modal-movie-item .movie-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 .movie-meta {
   display: flex;
   align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
   color: var(--text-secondary);
+}
+
+.modal-movie-item .movie-meta span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .rating {
@@ -260,6 +277,14 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
 }
 
 @keyframes skeleton-loading {

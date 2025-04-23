@@ -11,6 +11,7 @@ import {
 import { useNavigate, Link, useParams } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import MovieStatsModal from "../components/MovieStatsModal";
+import FollowersList from "../components/FollowersList";
 import { useAuth } from "../contexts/AuthContext";
 
 function StatBox({ label, value, onClick }) {
@@ -121,6 +122,8 @@ function PublicProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showWatchedModal, setShowWatchedModal] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
 
@@ -130,7 +133,7 @@ function PublicProfile() {
         const response = await axiosClient.get(`/auth/user/${username}/`);
         setUser(response.data);
         setIsFollowing(response.data.is_following);
-        setFollowerCount(response.data.stats.followers);
+        setFollowerCount(response.data.follower_count);
       } catch (error) {
         setError(
           error.response?.data?.message || "Failed to load user profile"
@@ -222,18 +225,18 @@ function PublicProfile() {
             <div className="stats-row">
               <StatBox
                 label="Movies Watched"
-                value={user.stats.movies_watched}
+                value={user.movies_watched}
                 onClick={() => setShowWatchedModal(true)}
               />
               <StatBox
                 label="Following"
-                value={user.stats.following}
-                onClick={() => navigate(`/users/${user.username}/following`)}
+                value={user.following_count}
+                onClick={() => setShowFollowingModal(true)}
               />
               <StatBox
                 label="Followers"
                 value={followerCount}
-                onClick={() => navigate(`/users/${user.username}/followers`)}
+                onClick={() => setShowFollowersModal(true)}
               />
             </div>
           </div>
@@ -243,7 +246,7 @@ function PublicProfile() {
           <MovieList
             title="Recently Watched"
             movies={user.recently_watched}
-            count={user.stats.movies_watched}
+            count={user.movies_watched}
             type="recently-watched"
             icon={Clock}
             emptyMessage="No movies watched yet"
@@ -273,6 +276,24 @@ function PublicProfile() {
           type="watched"
           username={username}
           onClose={() => setShowWatchedModal(false)}
+        />
+      )}
+
+      {showFollowersModal && (
+        <FollowersList
+          title="Followers"
+          username={username}
+          type="followers"
+          onClose={() => setShowFollowersModal(false)}
+        />
+      )}
+
+      {showFollowingModal && (
+        <FollowersList
+          title="Following"
+          username={username}
+          type="following"
+          onClose={() => setShowFollowingModal(false)}
         />
       )}
     </div>

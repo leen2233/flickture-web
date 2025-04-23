@@ -2613,7 +2613,7 @@ input.error {
 
 .follow-button.following {
   background: transparent;
-  border: 1px solid rgba(220, 63, 114, 0.3);
+  /* border: 1px solid rgba(220, 63, 114, 0.3); */
   color: #dc3f72;
 }
 
@@ -2732,7 +2732,6 @@ input.error {
 .follow-button {
   height: 36px;
   padding: 0 1rem;
-  border-radius: 18px;
   font-size: 0.9rem;
   font-weight: 500;
   background-color: #dc3f72;
@@ -2742,16 +2741,8 @@ input.error {
   transition: background-color 0.2s;
 }
 
-.follow-button.following {
-  background-color: #2c2c2c;
-}
-
 .follow-button:hover {
   background-color: #c23563;
-}
-
-.follow-button.following:hover {
-  background-color: #3c3c3c;
 }
 
 /* Add hover effects for cast and director items */

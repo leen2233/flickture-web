@@ -176,9 +176,11 @@ function MovieStatsModal({ title, type, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{title}</h2>
-          <div className="modal-subtitle">
-            {totalCount} {totalCount === 1 ? "movie" : "movies"}
+          <div className="modal-title">
+            <h2>{title}</h2>
+            <div className="modal-subtitle">
+              {totalCount} {totalCount === 1 ? "movie" : "movies"}
+            </div>
           </div>
           <button className="close-button" onClick={onClose}>
             <X size={20} />
