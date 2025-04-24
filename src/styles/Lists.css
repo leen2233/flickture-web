@@ -79,6 +79,13 @@
   color: white;
 }
 
+.tab-button.disabled {
+  background: bottom;
+}
+
+.tab-button.disabled:hover {
+  border: 1px solid var(--border-color);
+}
 .lists-section {
   margin-bottom: 48px;
 }

@@ -57,7 +57,7 @@
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -67,7 +67,7 @@
   background-color: transparent;
   color: #374151;
   border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
 }

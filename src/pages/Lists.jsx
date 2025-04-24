@@ -15,7 +15,7 @@ import axiosClient from "../utils/axios";
 import { useAuth } from "../contexts/AuthContext";
 import AuthRequiredPopup from "../components/AuthRequiredPopup";
 
-function ListCard({ list }) {
+function ListCard({ list, showLikeButton }) {
   const [isLiked, setIsLiked] = useState(list.is_liked);
 
   const handleLike = async (e) => {
@@ -52,12 +52,14 @@ function ListCard({ list }) {
           <div className="list-card-creator">
             <span>by {list.creator}</span>
           </div>
-          <button
-            className={`list-like-button ${isLiked ? "liked" : ""}`}
-            onClick={handleLike}
-          >
-            <Heart size={14} />
-          </button>
+          {showLikeButton && (
+            <button
+              className={`list-like-button ${isLiked ? "liked" : ""}`}
+              onClick={handleLike}
+            >
+              <Heart size={14} />
+            </button>
+          )}
         </div>
       </div>
     </Link>
@@ -65,6 +67,7 @@ function ListCard({ list }) {
 }
 
 function ListsSection({ title, icon: Icon, lists, emptyMessage }) {
+  const { currentUser } = useAuth();
   if (!lists?.length) {
     return (
       <div className="lists-section-empty">
@@ -84,7 +87,7 @@ function ListsSection({ title, icon: Icon, lists, emptyMessage }) {
       </div>
       <div className="lists-section-grid">
         {lists.map((list) => (
-          <ListCard key={list.id} list={list} />
+          <ListCard key={list.id} list={list} showLikeButton={!!currentUser} />
         ))}
       </div>
     </div>
@@ -156,9 +159,14 @@ function Lists() {
 
   const tabs = [
     { id: "featured", label: "Featured", icon: TrendingUp },
-    { id: "myLists", label: "My Lists", icon: Bookmark },
-    { id: "liked", label: "Liked", icon: Heart },
     { id: "community", label: "Community", icon: Users },
+    { id: "liked", label: "Liked", icon: Heart, isActive: !!currentUser },
+    {
+      id: "myLists",
+      label: "My Lists",
+      icon: Bookmark,
+      isActive: !!currentUser,
+    },
   ];
 
   return (
@@ -173,8 +181,9 @@ function Lists() {
                   key={tab.id}
                   className={`tab-button ${
                     activeTab === tab.id ? "active" : ""
-                  }`}
+                  } ${tab.isActive === false ? "disabled" : ""}`}
                   onClick={() => setActiveTab(tab.id)}
+                  disabled={tab.isActive === false}
                 >
                   <Icon size={16} />
                   <span>{tab.label}</span>

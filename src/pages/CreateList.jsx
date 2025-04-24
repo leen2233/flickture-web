@@ -185,6 +185,12 @@ function CreateList({ isEditing }) {
         };
         fetchList();
       }
+    } else if (location.state?.movie) {
+      // If movie was passed from AddToListModal
+      setFormData((prev) => ({
+        ...prev,
+        movies: [location.state.movie],
+      }));
     }
   }, [isEditing, location.state, id, navigate]);
 

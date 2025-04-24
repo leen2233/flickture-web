@@ -28,6 +28,7 @@ import { RatingStars } from "../components/RatingStars";
 import { toast } from "react-toastify";
 import { useAuth } from "../contexts/AuthContext";
 import AuthRequiredPopup from "../components/AuthRequiredPopup";
+import AddToListModal from "../components/AddToListModal";
 
 function CollectionSection({ collection, collection_movies }) {
   const navigate = useNavigate();
@@ -157,6 +158,7 @@ function MovieDetail() {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [showAuthPopup, setShowAuthPopup] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showAddToListModal, setShowAddToListModal] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -313,6 +315,14 @@ function MovieDetail() {
       navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleAddToList = () => {
+    if (!currentUser) {
+      setShowAuthPopup(true);
+    } else {
+      setShowAddToListModal(true);
     }
   };
 
@@ -577,7 +587,7 @@ function MovieDetail() {
                   {movie.is_favorite ? "In Favorites" : "Add to Favorites"}
                 </span>
               </button>
-              <button className="action-button">
+              <button className="action-button" onClick={handleAddToList}>
                 <ListPlus size={20} />
                 <span>Add to List</span>
               </button>
@@ -671,6 +681,11 @@ function MovieDetail() {
         onClose={() => setShowCommentModal(false)}
         onSubmit={handleCommentSubmit}
         isSubmitting={isSubmittingComment}
+      />
+      <AddToListModal
+        movie={movie}
+        isOpen={showAddToListModal}
+        onClose={() => setShowAddToListModal(false)}
       />
       <AuthRequiredPopup
         isOpen={showAuthPopup}
