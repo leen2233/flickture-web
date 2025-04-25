@@ -9,7 +9,7 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Search from "./pages/Search";
 import MovieDetail from "./pages/MovieDetail";
-import MovieListPage from "./pages/MovieListPage";
+import ProfileMoviesList from "./pages/ProfileMoviesList";
 import Comments from "./pages/Comments";
 import Lists from "./pages/Lists";
 import ListDetail from "./pages/ListDetail";
@@ -81,8 +81,7 @@ function AppRoutes() {
         <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
-        <Route path="/movies/:type" element={<MovieListPage />} />
-
+        <Route path="/profile/:type" element={<ProfileMoviesList />} />
         <Route path="lists" element={<Lists />} />
         <Route path="lists/:id" element={<ListDetail />} />
         <Route

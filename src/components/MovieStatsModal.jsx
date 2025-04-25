@@ -1,7 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, Loader, BookmarkPlus, Check, Heart, Plus } from "lucide-react";
+import {
+  X,
+  Loader,
+  BookmarkPlus,
+  Check,
+  Heart,
+  Plus,
+  Filter,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "./SearchInput";
+import { formatTimeAgo } from "../utils/dateUtils";
 import axiosClient from "../utils/axios";
 import "../styles/MovieStatsModal.css";
 
@@ -14,16 +23,30 @@ function MovieStatsModal({ title, type, onClose }) {
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState(
+    type === "favorites" ? "all" : type
+  );
+  const [favoriteFilter, setFavoriteFilter] = useState(
+    type === "favorites" ? "favorite" : "all"
+  );
 
   const fetchMovies = async (pageNum = 1, search = "") => {
     try {
       setIsLoading(true);
-      const response = await axiosClient.get(`/watchlist/?status=${type}`, {
-        params: {
-          page: pageNum,
-          search: search,
-        },
-      });
+      const params = {
+        page: pageNum,
+        search: search,
+      };
+
+      if (statusFilter !== "all") {
+        params.status = statusFilter;
+      }
+
+      if (favoriteFilter !== "all") {
+        params.is_favorite = favoriteFilter === "favorite";
+      }
+
+      const response = await axiosClient.get(`/auth/me/watchlist/`, { params });
 
       if (pageNum === 1) {
         setMovies(response.data.results);
@@ -50,10 +73,11 @@ function MovieStatsModal({ title, type, onClose }) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Fetch movies when debounced search query changes
+  // Fetch movies when filters change
   useEffect(() => {
+    setPage(1);
     fetchMovies(1, debouncedSearchQuery);
-  }, [type, debouncedSearchQuery]);
+  }, [type, debouncedSearchQuery, statusFilter, favoriteFilter]);
 
   const handleScroll = useCallback(
     (e) => {
@@ -79,7 +103,7 @@ function MovieStatsModal({ title, type, onClose }) {
   const handleWatchlistToggle = async (e, movie) => {
     e.stopPropagation();
     try {
-      if (!movie.watchlist_status) {
+      if (!movie.status) {
         await axiosClient.post("/watchlist/", {
           tmdb_id: movie.tmdb_id,
           status: "watchlist",
@@ -87,7 +111,7 @@ function MovieStatsModal({ title, type, onClose }) {
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id
-              ? { ...item, watchlist_status: "watchlist" }
+              ? { ...item, status: "watchlist" }
               : item
           )
         );
@@ -96,7 +120,7 @@ function MovieStatsModal({ title, type, onClose }) {
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id
-              ? { ...item, watchlist_status: null }
+              ? { ...item, status: null }
               : item
           )
         );
@@ -106,17 +130,16 @@ function MovieStatsModal({ title, type, onClose }) {
     }
   };
 
-  const handleWatchedToggle = async (e, movie) => {
+  const handleWatchedToggle = async (e, watchlist) => {
     e.stopPropagation();
     try {
-      await axiosClient.post("/watchlist/", {
-        tmdb_id: movie.tmdb_id,
+      await axiosClient.patch(`/watchlist/${watchlist.movie.tmdb_id}/`, {
         status: "watched",
       });
       setMovies((prev) =>
         prev.map((item) =>
-          item.movie.tmdb_id === movie.tmdb_id
-            ? { ...item, watchlist_status: "watched" }
+          item.movie.tmdb_id === watchlist.movie.tmdb_id
+            ? { ...item, status: "watched" }
             : item
         )
       );
@@ -197,6 +220,50 @@ function MovieStatsModal({ title, type, onClose }) {
             showButton={false}
             containerClassName="modal-search-input"
           />
+          <div className="filter-controls">
+            <div className="status-filters">
+              <button
+                className={`filter-button ${
+                  statusFilter === "all" ? "active" : ""
+                }`}
+                onClick={() => setStatusFilter("all")}
+              >
+                All
+              </button>
+              <button
+                className={`filter-button ${
+                  statusFilter === "watched" ? "active" : ""
+                }`}
+                onClick={() => setStatusFilter("watched")}
+              >
+                Watched
+              </button>
+              <button
+                className={`filter-button ${
+                  statusFilter === "watchlist" ? "active" : ""
+                }`}
+                onClick={() => setStatusFilter("watchlist")}
+              >
+                Watchlist
+              </button>
+            </div>
+            <button
+              className={`filter-button favorite-filter ${
+                favoriteFilter === "favorite" ? "active" : ""
+              }`}
+              onClick={() =>
+                setFavoriteFilter(
+                  favoriteFilter === "favorite" ? "all" : "favorite"
+                )
+              }
+            >
+              <Heart
+                size={16}
+                fill={favoriteFilter === "favorite" ? "currentColor" : "none"}
+              />
+              Favorites
+            </button>
+          </div>
         </div>
 
         <div className="modal-body" onScroll={handleScroll}>
@@ -216,7 +283,10 @@ function MovieStatsModal({ title, type, onClose }) {
                     className="movie-thumbnail"
                   />
                   <div className="movie-info">
-                    <h3>{item.movie.title}</h3>
+                    <div className="movie-title-row">
+                      <h3>{item.movie.title}</h3>
+                      <span className="content-type">{item.movie.type}</span>
+                    </div>
                     <div className="movie-meta">
                       {item.movie.year && <span>{item.movie.year}</span>}
                       {item.movie.rating && (
@@ -224,25 +294,36 @@ function MovieStatsModal({ title, type, onClose }) {
                           ★ {item.movie.rating.toFixed(1)}
                         </span>
                       )}
+                      <span className="time-ago">
+                        {formatTimeAgo(item.updated_at)}
+                      </span>
                     </div>
                   </div>
                   <div className="movie-actions">
-                    {item.watchlist_status === "watchlist" ? (
+                    {item.status === "watched" ? (
+                      <button
+                        className="action-icon-button active"
+                        onClick={(e) => handleWatchedToggle(e, item)}
+                        title="Mark as watched"
+                      >
+                        <BookmarkPlus size={18} />
+                      </button>
+                    ) : item.status === "watchlist" ? (
                       <button
                         className="action-icon-button"
                         onClick={(e) => handleWatchedToggle(e, item)}
                         title="Mark as watched"
                       >
-                        <Plus size={18} />
+                        <BookmarkPlus size={18} />
                       </button>
                     ) : (
-                      !item.watchlist_status && (
+                      !item.status && (
                         <button
                           className="action-icon-button"
                           onClick={(e) => handleWatchlistToggle(e, item)}
                           title="Add to watchlist"
                         >
-                          <BookmarkPlus size={18} />
+                          <Plus size={18} />
                         </button>
                       )
                     )}

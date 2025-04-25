@@ -9,8 +9,10 @@ function MovieList({ title, movies, icon: Icon, showStatus, onMovieClick }) {
     <div className="movie-list-section">
       {title && (
         <div className="list-header">
-          <Icon size={20} />
-          <h2>{title}</h2>
+          <div className="list-header-title">
+            <Icon size={20} />
+            <h2>{title}</h2>
+          </div>
         </div>
       )}
       <div className="movies-grid">

@@ -82,6 +82,7 @@ function MovieList({
   type,
   icon: Icon,
   emptyMessage,
+  seeAll,
 }) {
   if (!movies?.length) {
     return (
@@ -98,13 +99,15 @@ function MovieList({
   return (
     <div className="profile-movie-list-section">
       <div className="list-header">
-        <Icon size={20} className="icon" />
-        <h2>{title}</h2>
+        <div className="list-header-title">
+          <Icon size={20} className="icon" />
+          <h2>{title}</h2>
+        </div>
         {count > 5 && (
-          <Link to={`/movies/${type}`} className="see-all">
+          <div className="see-all" onClick={() => seeAll(type)}>
             <span>See all {count}</span>
             <ChevronRight size={16} />
-          </Link>
+          </div>
         )}
       </div>
       <div className="movies-grid">
@@ -119,14 +122,14 @@ function MovieList({
 function Profile() {
   const navigate = useNavigate();
   const { currentUser, checkAuth } = useAuth();
-  const [showWatchedModal, setShowWatchedModal] = useState(false);
+  const [showWatchedModal, setShowWatchedModal] = useState("");
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
 
   const handleWatchedClick = async () => {
     try {
       const response = await axiosClient.get("/watchlist/?status=watched");
-      setShowWatchedModal(true);
+      setShowWatchedModal("watched");
     } catch (error) {
       console.error("Failed to fetch watched movies:", error);
     }
@@ -216,25 +219,28 @@ function Profile() {
             title="Recently Watched"
             movies={currentUser.recently_watched}
             count={currentUser.movies_watched}
-            type="recently-watched"
+            type="watched"
             icon={Clock}
             emptyMessage="No movies watched yet. Start watching!"
+            seeAll={() => setShowWatchedModal("watched")}
           />
           <MovieList
             title="Want to Watch"
             movies={currentUser.watchlist}
-            count={currentUser.watchlist?.length}
-            type="want-to-watch"
+            count={currentUser.watchlist_count}
+            type="watchlist"
             icon={BookMarked}
             emptyMessage="Your watchlist is empty. Start adding movies!"
+            seeAll={() => setShowWatchedModal("watchlist")}
           />
           <MovieList
             title="Favorites"
             movies={currentUser.favorites}
-            count={currentUser.favorites?.length}
+            count={currentUser.favorites_count}
             type="favorites"
             icon={Heart}
             emptyMessage="No favorite movies yet. Mark some movies as favorites!"
+            seeAll={() => setShowWatchedModal("favorites")}
           />
         </div>
       </div>
@@ -242,8 +248,8 @@ function Profile() {
       {showWatchedModal && (
         <MovieStatsModal
           title="Movies Watched"
-          type="watched"
-          onClose={() => setShowWatchedModal(false)}
+          type={showWatchedModal}
+          onClose={() => setShowWatchedModal("")}
         />
       )}
 
