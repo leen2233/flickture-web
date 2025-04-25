@@ -1392,3 +1392,266 @@
   background: var(--border-color);
   margin: 0 -24px 24px;
 }
+
+/* Genre Page Styles */
+.genre-page {
+  min-height: 100vh;
+  background: var(--background-color);
+}
+
+.genre-header {
+  position: relative;
+  height: 300px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #2d1b36 100%);
+  margin-bottom: 32px;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.3s ease;
+}
+
+.header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--background-color));
+}
+
+.genre-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  z-index: 2;
+  width: 100px;
+}
+
+.genre-header-content {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  padding: 0 24px;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.genre-header-content h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.genre-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.genre-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+}
+
+.genre-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.genre-movie-item {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: transform 0.2s ease;
+}
+
+.genre-movie-item:hover {
+  transform: translateY(-4px);
+}
+
+.genre-movie-item .movie-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+}
+
+.genre-movie-item .movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.genre-movie-item:hover .movie-poster img {
+  transform: scale(1.05);
+}
+
+.movie-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.genre-movie-item:hover .movie-overlay {
+  opacity: 1;
+}
+
+.genre-movie-item .movie-meta {
+  display: flex;
+  gap: 12px;
+  color: white;
+}
+
+.genre-movie-item .rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.genre-movie-item .movie-info {
+  padding: 12px 4px;
+}
+
+.genre-movie-item .movie-info h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.page-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--card-background);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-button:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.genre-loading,
+.genre-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 50vh;
+  color: var(--text-secondary);
+}
+
+.loading-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  color: var(--text-secondary);
+}
+
+/* Mobile Responsive for Genre Page */
+@media (max-width: 768px) {
+  .genre-header {
+    height: 240px;
+  }
+
+  .genre-nav {
+    padding: 16px;
+  }
+
+  .genre-header-content {
+    bottom: 32px;
+    padding: 0 16px;
+  }
+
+  .genre-header-content h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .genre-stat {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .genre-content {
+    padding: 0 16px;
+  }
+
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .genre-movie-item .movie-info h3 {
+    font-size: 13px;
+  }
+
+  .pagination {
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .page-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .page-info {
+    font-size: 13px;
+  }
+}

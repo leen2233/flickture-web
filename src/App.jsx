@@ -16,6 +16,7 @@ import ListDetail from "./pages/ListDetail";
 import CreateList from "./pages/CreateList";
 import PersonDetail from "./pages/PersonDetail";
 import CollectionDetail from "./pages/CollectionDetail";
+import GenreMovies from "./pages/GenreMovies";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 import "./App.css";
@@ -101,6 +102,7 @@ function AppRoutes() {
           }
         />
         <Route path="collection/:id" element={<CollectionDetail />} />
+        <Route path="genre/:tmdbId" element={<GenreMovies />} />
       </Route>
     </Routes>
   );

@@ -439,9 +439,13 @@ function MovieDetail() {
               {movie.genres && (
                 <div className="genres">
                   {movie.genres.map((genre) => (
-                    <span key={genre.id} className="genre-tag">
+                    <Link
+                      key={genre.id}
+                      to={`/genre/${genre.tmdb_id}`}
+                      className="genre-tag"
+                    >
                       {genre.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
               )}
