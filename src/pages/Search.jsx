@@ -10,6 +10,7 @@ import {
   Clock,
   Trophy,
   Calendar,
+  Tag,
 } from "lucide-react";
 import MovieList from "../components/MovieList";
 import axiosClient from "../utils/axios";
@@ -136,6 +137,7 @@ function Search() {
   const [movies, setMovies] = useState([]);
   const [movieLists, setMovieLists] = useState(null);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [error, setError] = useState(null);
@@ -148,11 +150,10 @@ function Search() {
   }, [movies]);
 
   useEffect(() => {
-    const fetchMovieLists = async () => {
+    const fetchData = async () => {
       setIsLoadingLists(true);
       try {
-        // Fetch popular, now playing, top rated, and upcoming movies
-        const [popularRes, nowPlayingRes, topRatedRes, upcomingRes] =
+        const [popularRes, nowPlayingRes, topRatedRes, upcomingRes, genresRes] =
           await Promise.all([
             axiosClient.get("/movies/discover", {
               params: { category: "popular" },
@@ -166,6 +167,7 @@ function Search() {
             axiosClient.get("/movies/discover", {
               params: { category: "upcoming" },
             }),
+            axiosClient.get("/genres/"),
           ]);
 
         setMovieLists({
@@ -174,16 +176,17 @@ function Search() {
           topRated: topRatedRes.data.results,
         });
         setUpcomingMovies(upcomingRes.data.results);
+        setGenres(genresRes.data.results);
       } catch (err) {
-        console.error("Failed to fetch movie lists:", err);
+        console.error("Failed to fetch data:", err);
       } finally {
         setIsLoadingLists(false);
       }
     };
 
-    // Only fetch movie lists if no search query
+    // Only fetch data if no search query
     if (!searchParams.get("q")) {
-      fetchMovieLists();
+      fetchData();
     }
   }, [searchParams]);
 
@@ -278,6 +281,24 @@ function Search() {
             </div>
           ) : movieLists ? (
             <div className="movie-lists-container">
+              <div className="search-movie-section">
+                <div className="search-movie-section-header">
+                  <Tag size={20} />
+                  <h2>Genres</h2>
+                </div>
+                <div className="search-genre-row">
+                  {genres.map((genre) => (
+                    <Link
+                      key={genre.id}
+                      to={`/genre/${genre.tmdb_id}`}
+                      className="genre-pill"
+                    >
+                      {genre.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <div className="search-movie-section">
                 <div className="search-movie-section-header">
                   <Flame size={20} />
