@@ -40,7 +40,7 @@ function MovieItem({ movie }) {
 
   const handleWatchlistAction = async (newStatus) => {
     try {
-      await axiosClient.post(`/watchlist/${movie.tmdb_id}/`, {
+      await axiosClient.post(`/watchlist/${movie.type}/${movie.tmdb_id}/`, {
         status: newStatus,
         tmdb_id: movie.tmdb_id,
       });

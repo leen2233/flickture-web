@@ -50,7 +50,7 @@ function CollectionSection({ collection, collection_movies }) {
             key={movie.tmdb_id}
             className="movie-grid-item collection-movie-item"
             onClick={() =>
-              navigate(`/movie/${movie.tmdb_id}`, {
+              navigate(`/${movie.type}}/${movie.tmdb_id}`, {
                 state: { from: "search" },
               })
             }
@@ -195,6 +195,7 @@ function MovieDetail() {
   }, [tmdbId]);
 
   const handleWatchlistToggle = async () => {
+    console.log("PRESSEEEEEEEEEEEEEEEEEEEEEEED");
     if (isLoadingWatchlist) return;
 
     if (!currentUser) {
@@ -207,19 +208,18 @@ function MovieDetail() {
       setError(null);
 
       if (!movie.watchlist_status) {
+        console.log("type: ", movie.type);
         await axiosClient.post("/watchlist/", {
           tmdb_id: tmdbId,
+          type: movie.type,
           status: "watchlist",
         });
         setMovie((prev) => ({ ...prev, watchlist_status: "watchlist" }));
       } else {
-        await axiosClient.delete(`/watchlist/${tmdbId}/`);
+        await axiosClient.delete(`/watchlist/${movie.type}/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to update watchlist. Please try again.";
       console.error("Watchlist error:", error);
     } finally {
       setIsLoadingWatchlist(false);
@@ -239,7 +239,7 @@ function MovieDetail() {
         setIsLoadingWatchlist(true);
         setError(null);
 
-        await axiosClient.patch(`/watchlist/${tmdbId}/`, {
+        await axiosClient.patch(`/watchlist/${movie.type}/${tmdbId}/`, {
           status: "watched",
         });
 
@@ -247,10 +247,6 @@ function MovieDetail() {
 
         setShowCommentModal(true);
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          "Failed to update watched status. Please try again.";
-        setError(errorMessage);
         console.error("Watched status error:", error);
       } finally {
         setIsLoadingWatchlist(false);
@@ -259,7 +255,7 @@ function MovieDetail() {
       try {
         setIsLoadingWatchlist(true);
         setError(null);
-        await axiosClient.delete(`/watchlist/${tmdbId}/`);
+        await axiosClient.delete(`/watchlist/${movie.type}/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, watchlist_status: null }));
       } catch (error) {
         const errorMessage =
@@ -287,10 +283,11 @@ function MovieDetail() {
       if (!movie.is_favorite) {
         await axiosClient.post("/favorites/", {
           tmdb_id: tmdbId,
+          type: type,
         });
         setMovie((prev) => ({ ...prev, is_favorite: true }));
       } else {
-        await axiosClient.delete(`/favorites/${tmdbId}/`);
+        await axiosClient.delete(`/favorites/${type}/${tmdbId}/`);
         setMovie((prev) => ({ ...prev, is_favorite: false }));
       }
     } catch (error) {
@@ -617,7 +614,7 @@ function MovieDetail() {
             <div className="cast-section">
               <div className="cast-header">
                 <h2>Cast</h2>
-                <Link to={`/movie/${tmdbId}/cast`} className="see-all">
+                <Link to={`/${type}/${tmdbId}/cast`} className="see-all">
                   <span>See all {movie.cast_count}</span>
                   <ChevronRight size={16} />
                 </Link>

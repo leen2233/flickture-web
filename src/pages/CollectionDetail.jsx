@@ -37,20 +37,8 @@ function MovieItem({ movie }) {
     fetchMovieStatus();
   }, [movie.tmdb_id]);
 
-  const handleWatchlistAction = async (newStatus) => {
-    try {
-      await axiosClient.post(`/watchlist/${movie.tmdb_id}/`, {
-        status: newStatus,
-        tmdb_id: movie.tmdb_id,
-      });
-      setStatus(newStatus);
-    } catch (error) {
-      console.error("Error updating watchlist:", error);
-    }
-  };
-
   return (
-    <Link to={`/movie/${movie.tmdb_id}`} className="movie-grid-item">
+    <Link to={`/${movie.type}/${movie.tmdb_id}`} className="movie-grid-item">
       <div className="movie-poster">
         <img
           src={movie.poster_preview_url || "/default-movie.png"}

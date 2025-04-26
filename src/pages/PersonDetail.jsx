@@ -289,7 +289,7 @@ const PersonDetail = () => {
             <div className="movies-scroll">
               {filmography.map((movie, index) => (
                 <Link
-                  to={`/movie/${movie.tmdb_id}`}
+                  to={`/${movie.type}/${movie.tmdb_id}`}
                   key={movie.id}
                   className="movie-card"
                   ref={

@@ -43,7 +43,7 @@ function MovieCard({ item }) {
       key={movie.tmdb_id}
       className="movie-grid-item"
       onClick={() =>
-        navigate(`/movie/${movie.tmdb_id}`, {
+        navigate(`/${movie.type}/${movie.tmdb_id}`, {
           state: { from: "profile" },
         })
       }
@@ -127,12 +127,7 @@ function Profile() {
   const [showFollowingModal, setShowFollowingModal] = useState(false);
 
   const handleWatchedClick = async () => {
-    try {
-      const response = await axiosClient.get("/watchlist/?status=watched");
-      setShowWatchedModal("watched");
-    } catch (error) {
-      console.error("Failed to fetch watched movies:", error);
-    }
+    setShowWatchedModal("watched");
   };
 
   useEffect(() => {

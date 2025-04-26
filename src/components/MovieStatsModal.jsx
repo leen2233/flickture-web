@@ -95,7 +95,7 @@ function MovieStatsModal({ title, type, onClose }) {
   );
 
   const handleMovieClick = (movie) => {
-    navigate(`/movie/${movie.tmdb_id}`, {
+    navigate(`/${movie.type}/${movie.tmdb_id}`, {
       state: { from: "profile" },
     });
   };
@@ -106,6 +106,7 @@ function MovieStatsModal({ title, type, onClose }) {
       if (!movie.status) {
         await axiosClient.post("/watchlist/", {
           tmdb_id: movie.tmdb_id,
+          type: movie.type,
           status: "watchlist",
         });
         setMovies((prev) =>
@@ -116,7 +117,7 @@ function MovieStatsModal({ title, type, onClose }) {
           )
         );
       } else {
-        await axiosClient.delete(`/watchlist/${movie.tmdb_id}/`);
+        await axiosClient.delete(`/watchlist/${movie.type}/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
             item.movie.tmdb_id === movie.tmdb_id
@@ -133,9 +134,12 @@ function MovieStatsModal({ title, type, onClose }) {
   const handleWatchedToggle = async (e, watchlist) => {
     e.stopPropagation();
     try {
-      await axiosClient.patch(`/watchlist/${watchlist.movie.tmdb_id}/`, {
-        status: "watched",
-      });
+      await axiosClient.patch(
+        `/watchlist/${watchlist.movie.type}/${watchlist.movie.tmdb_id}/`,
+        {
+          status: "watched",
+        }
+      );
       setMovies((prev) =>
         prev.map((item) =>
           item.movie.tmdb_id === watchlist.movie.tmdb_id
@@ -153,20 +157,23 @@ function MovieStatsModal({ title, type, onClose }) {
     try {
       if (!movie.is_favorite) {
         await axiosClient.post("/favorites/", {
+          type: movie.type,
           tmdb_id: movie.tmdb_id,
         });
         setMovies((prev) =>
           prev.map((item) =>
-            item.movie.tmdb_id === movie.tmdb_id
+            item.movie.tmdb_id === movie.tmdb_id &&
+            item.movie.type === movie.type
               ? { ...item, movie: { ...item.movie, is_favorite: true } }
               : item
           )
         );
       } else {
-        await axiosClient.delete(`/favorites/${movie.tmdb_id}/`);
+        await axiosClient.delete(`/favorites/${movie.type}/${movie.tmdb_id}/`);
         setMovies((prev) =>
           prev.map((item) =>
-            item.movie.tmdb_id === movie.tmdb_id
+            item.movie.tmdb_id === movie.tmdb_id &&
+            item.movie.type === movie.type
               ? { ...item, movie: { ...item.movie, is_favorite: false } }
               : item
           )

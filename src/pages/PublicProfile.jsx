@@ -41,7 +41,7 @@ function MovieCard({ item }) {
       key={movie.tmdb_id}
       className="movie-grid-item"
       onClick={() =>
-        navigate(`/movie/${movie.tmdb_id}`, {
+        navigate(`/${movie.type}/${movie.tmdb_id}`, {
           state: { from: "profile" },
         })
       }
