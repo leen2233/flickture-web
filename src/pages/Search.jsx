@@ -9,6 +9,7 @@ import {
   Flame,
   Clock,
   Trophy,
+  Calendar,
 } from "lucide-react";
 import MovieList from "../components/MovieList";
 import axiosClient from "../utils/axios";
@@ -99,12 +100,42 @@ function SearchResultCard({ item }) {
   return <MediaCard />;
 }
 
+function HorizontalMovieCard({ movie }) {
+  return (
+    <Link
+      to={`/${movie.type}/${movie.tmdb_id}`}
+      className="search-movie-card-horizontal"
+    >
+      <div className="search-movie-poster">
+        <img
+          src={
+            movie.poster_preview_url ||
+            (movie.type === "tv" ? "/default-tv.png" : "/default-movie.png")
+          }
+          alt={movie.title}
+        />
+        {movie.rating > 0 && (
+          <div className="rating-badge">
+            <Star size={12} />
+            <span>{movie.rating.toFixed(1)}</span>
+          </div>
+        )}
+      </div>
+      <div className="search-movie-info">
+        <h3 className="search-movie-title">{movie.title}</h3>
+        {movie.year && <span className="search-movie-year">{movie.year}</span>}
+      </div>
+    </Link>
+  );
+}
+
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [movies, setMovies] = useState([]);
   const [movieLists, setMovieLists] = useState(null);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [error, setError] = useState(null);
@@ -120,24 +151,29 @@ function Search() {
     const fetchMovieLists = async () => {
       setIsLoadingLists(true);
       try {
-        // Fetch popular, now playing, and top rated movies
-        const [popularRes, nowPlayingRes, topRatedRes] = await Promise.all([
-          axiosClient.get("/movies/discover", {
-            params: { category: "popular" },
-          }),
-          axiosClient.get("/movies/discover", {
-            params: { category: "now_playing" },
-          }),
-          axiosClient.get("/movies/discover", {
-            params: { category: "top_rated" },
-          }),
-        ]);
+        // Fetch popular, now playing, top rated, and upcoming movies
+        const [popularRes, nowPlayingRes, topRatedRes, upcomingRes] =
+          await Promise.all([
+            axiosClient.get("/movies/discover", {
+              params: { category: "popular" },
+            }),
+            axiosClient.get("/movies/discover", {
+              params: { category: "now_playing" },
+            }),
+            axiosClient.get("/movies/discover", {
+              params: { category: "top_rated" },
+            }),
+            axiosClient.get("/movies/discover", {
+              params: { category: "upcoming" },
+            }),
+          ]);
 
         setMovieLists({
           popular: popularRes.data.results,
           nowPlaying: nowPlayingRes.data.results,
           topRated: topRatedRes.data.results,
         });
+        setUpcomingMovies(upcomingRes.data.results);
       } catch (err) {
         console.error("Failed to fetch movie lists:", err);
       } finally {
@@ -242,21 +278,53 @@ function Search() {
             </div>
           ) : movieLists ? (
             <div className="movie-lists-container">
-              <MovieList
-                title="Popular Movies"
-                movies={movieLists.popular}
-                icon={Flame}
-              />
-              <MovieList
-                title="Now Playing"
-                movies={movieLists.nowPlaying}
-                icon={Clock}
-              />
-              <MovieList
-                title="Top Rated"
-                movies={movieLists.topRated}
-                icon={Trophy}
-              />
+              <div className="search-movie-section">
+                <div className="search-movie-section-header">
+                  <Flame size={20} />
+                  <h2>Popular Movies</h2>
+                </div>
+                <div className="search-movie-row">
+                  {movieLists.popular.map((movie) => (
+                    <HorizontalMovieCard key={movie.tmdb_id} movie={movie} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="search-movie-section">
+                <div className="search-movie-section-header">
+                  <Clock size={20} />
+                  <h2>Now Playing</h2>
+                </div>
+                <div className="search-movie-row">
+                  {movieLists.nowPlaying.map((movie) => (
+                    <HorizontalMovieCard key={movie.tmdb_id} movie={movie} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="search-movie-section">
+                <div className="search-movie-section-header">
+                  <Trophy size={20} />
+                  <h2>Top Rated</h2>
+                </div>
+                <div className="search-movie-row">
+                  {movieLists.topRated.map((movie) => (
+                    <HorizontalMovieCard key={movie.tmdb_id} movie={movie} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="search-movie-section">
+                <div className="search-movie-section-header">
+                  <Calendar size={20} />
+                  <h2>Upcoming Movies</h2>
+                </div>
+                <div className="search-movie-row">
+                  {upcomingMovies.map((movie) => (
+                    <HorizontalMovieCard key={movie.tmdb_id} movie={movie} />
+                  ))}
+                </div>
+              </div>
             </div>
           ) : null}
         </div>
