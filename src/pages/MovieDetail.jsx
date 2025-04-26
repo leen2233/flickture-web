@@ -484,11 +484,14 @@ function MovieDetail() {
               </Link>
             )}
             {movie.type === "tv" && movie.episode_number && (
-              <div className="metadata-item">
+              <Link
+                to={`/${movie.type}/${tmdbId}/episodes`}
+                className="metadata-item"
+              >
                 <ListIcon size={20} className="metadata-icon" />
                 <span className="metadata-label">Episode</span>
                 <span className="metadata-value">{movie.episode_number}</span>
-              </div>
+              </Link>
             )}
             <div className="metadata-item">
               <Calendar size={20} className="metadata-icon" />

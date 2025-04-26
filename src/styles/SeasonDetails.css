@@ -3,12 +3,14 @@
 }
 
 .season-detail-page .seasons-container {
+  position: relative;
   margin: auto;
   margin-top: 30px;
   display: flex;
   gap: 10px;
   justify-content: center;
   margin-bottom: 20px;
+  z-index: 10;
 }
 
 .season-detail-page .seasons-container .season {
@@ -30,10 +32,12 @@
 }
 
 .episodes-container {
+  position: relative;
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem;
   margin-bottom: 100px;
+  z-index: 10;
 }
 
 .episodes-table {

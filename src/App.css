@@ -1457,30 +1457,6 @@ input.error {
   min-height: 100vh;
 }
 
-.movie-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 400px;
-  background-size: cover;
-  background-position: center;
-}
-
-.backdrop-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.7),
-    var(--background-color)
-  );
-  z-index: 1;
-}
-
 .movie-detail-content {
   position: relative;
   z-index: 1;
@@ -1996,10 +1972,11 @@ input.error {
 .movie-backdrop {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 600px;
   background-size: cover;
   background-position: center;
-  margin-bottom: -300px;
+  margin-bottom: -500px;
+  z-index: 0;
 }
 
 .backdrop-overlay {
