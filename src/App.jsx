@@ -17,6 +17,7 @@ import PersonDetail from "./pages/PersonDetail";
 import CollectionDetail from "./pages/CollectionDetail";
 import GenreMovies from "./pages/GenreMovies";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import CastDetails from "./pages/CastDetails";
 
 import "./App.css";
 import "./styles/Lists.css";
@@ -77,6 +78,7 @@ function AppRoutes() {
         <Route path="/:type/:tmdbId" element={<MovieDetail />} />
         <Route path="/:type/:movieId/comments" element={<Comments />} />
         <Route path="/:type/:tmdbId/episodes/" element={<SeasonDetails />} />
+        <Route path="/:type/:id/cast" element={<CastDetails />} />
         <Route path="/person/:id" element={<PersonDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
