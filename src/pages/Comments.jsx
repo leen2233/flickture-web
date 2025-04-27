@@ -85,7 +85,6 @@ const CommentItem = ({
           content: responseText,
           parent: id,
           movie: movie.id,
-          rating: 1,
         }
       );
 
@@ -114,12 +113,10 @@ const CommentItem = ({
       try {
         setIsSubmitting(true);
         const newResponse = await axiosClient.post(
-          `/movies/${movieId}/${type}/comments/`,
+          `/movies/${movieId}/${type}/comments/reply/`,
           {
             content: responseText,
             parent: id, // Use the main comment's id as parent
-            movie: movie.id,
-            rating: 1,
           }
         );
 
@@ -536,6 +533,7 @@ function Comments() {
               key={comment.id}
               {...comment}
               movieId={movieId}
+              type={type}
               movie={movie}
               ref={index === comments.length - 1 ? observer.current : null}
               onDelete={handleDeleteComment}
