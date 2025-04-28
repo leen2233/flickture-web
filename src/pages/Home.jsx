@@ -40,7 +40,7 @@ function MoviePreview({ movie, type = "movie" }) {
   const handleMovieClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(`/${type}/${movie.id}`);
+    navigate(`/${movie.type}/${movie.tmdb_id}`);
   };
 
   return (
@@ -109,6 +109,7 @@ function ActivityCard({ activity }) {
           <MoviePreview
             movie={{
               id: activity.movie.id,
+              tmdb_id: activity.movie.tmdb_id,
               title: activity.movie.title,
               poster: activity.movie.poster,
               year: activity.movie.year,
@@ -117,6 +118,7 @@ function ActivityCard({ activity }) {
               overview: activity.movie.overview,
               runtime: activity.movie.runtime,
               vote_count: activity.movie.vote_count,
+              type: activity.movie.type,
             }}
           />
         )}
@@ -133,12 +135,14 @@ function ActivityCard({ activity }) {
           <MoviePreview
             movie={{
               id: activity.show.id,
+              tmdb_id: activity.show.tmdb_id,
               title: activity.show.title,
               poster: activity.show.poster,
               year: activity.show.year,
               rating: activity.show.rating,
               genres: activity.show.genres,
               overview: activity.show.overview,
+              type: activity.show.type,
             }}
             type="tv"
           />
