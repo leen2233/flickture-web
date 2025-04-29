@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../utils/axios";
+import { useAuth } from "../contexts/AuthContext";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [username, setUsername] = useState("");
+  const { checkAuth } = useAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -107,7 +109,7 @@ function Register() {
             className={errors.username ? "error" : ""}
           />
           {errors.username && (
-            <span className="error-message">{errors.username}</span>
+            <span className="register-error-message">{errors.username}</span>
           )}
         </div>
 
@@ -125,7 +127,7 @@ function Register() {
             className={errors.email ? "error" : ""}
           />
           {errors.email && (
-            <span className="error-message">{errors.email}</span>
+            <span className="register-error-message">{errors.email}</span>
           )}
         </div>
 
@@ -151,7 +153,7 @@ function Register() {
             </button>
           </div>
           {errors.password && (
-            <span className="error-message">{errors.password}</span>
+            <span className="register-error-message">{errors.password}</span>
           )}
         </div>
 
@@ -177,7 +179,9 @@ function Register() {
             </button>
           </div>
           {errors.confirmPassword && (
-            <span className="error-message">{errors.confirmPassword}</span>
+            <span className="register-error-message">
+              {errors.confirmPassword}
+            </span>
           )}
         </div>
 

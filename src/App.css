@@ -122,6 +122,12 @@ input.error {
   margin-left: 0.5rem;
 }
 
+.register-error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
 .password-input {
   position: relative;
 }
@@ -1239,6 +1245,8 @@ input.error {
   border: 1px dashed var(--border-color);
   color: var(--text-secondary);
   gap: 1rem;
+  margin-bottom: 20px;
+  margin-top: -6px;
 }
 
 .empty-state svg {

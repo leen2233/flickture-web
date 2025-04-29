@@ -88,8 +88,10 @@ function MovieList({
     return (
       <div className="profile-movie-list-section">
         <div className="list-header">
-          <Icon size={20} className="icon" />
-          <h2>{title}</h2>
+          <div className="list-header-title">
+            <Icon size={20} className="icon" />
+            <h2>{title}</h2>
+          </div>
         </div>
         <EmptyState icon={Film} message={emptyMessage} />
       </div>
