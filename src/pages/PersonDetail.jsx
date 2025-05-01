@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import axiosClient from "../utils/axios";
 import {
   ArrowLeft,
@@ -165,6 +166,45 @@ const PersonDetail = () => {
 
   return (
     <div className="person-detail-container">
+      <Helmet>
+        <title>{person.name} - Actor/Director Profile on Flickture</title>
+        <meta
+          name="description"
+          content={`Learn about ${
+            person.name
+          }'s career, filmography, biography, and more on Flickture. Known for ${person.known_for
+            ?.map((m) => m.title)
+            .join(", ")}.`}
+        />
+        <meta
+          name="keywords"
+          content={`${
+            person.name
+          }, actor, director, filmography, movies, TV shows, ${person.known_for
+            ?.map((m) => m.title)
+            .join(", ")}`}
+        />
+        <meta
+          property="og:title"
+          content={`${person.name} - Actor/Director Profile`}
+        />
+        <meta
+          property="og:description"
+          content={`Learn about ${person.name}'s career, filmography, biography, and more.`}
+        />
+        <meta property="og:image" content={person.profile_path} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content={`${person.name} - Actor/Director Profile`}
+        />
+        <meta
+          name="twitter:description"
+          content={`Learn about ${person.name}'s career, filmography, biography, and more.`}
+        />
+        <meta name="twitter:image" content={person.profile_path} />
+      </Helmet>
+
       <div className="movie-nav">
         <Link to="/" className="nav-button">
           <ArrowLeft size={18} />

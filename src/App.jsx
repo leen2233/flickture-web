@@ -18,6 +18,7 @@ import CollectionDetail from "./pages/CollectionDetail";
 import GenreMovies from "./pages/GenreMovies";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import CastDetails from "./pages/CastDetails";
+import { HelmetProvider } from "react-helmet-async";
 
 import "./App.css";
 import "./styles/Lists.css";
@@ -109,12 +110,14 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-        <ToastContainer />
-      </BrowserRouter>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+          <ToastContainer />
+        </BrowserRouter>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 

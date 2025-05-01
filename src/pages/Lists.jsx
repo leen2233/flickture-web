@@ -14,6 +14,7 @@ import {
 import axiosClient from "../utils/axios";
 import { useAuth } from "../contexts/AuthContext";
 import AuthRequiredPopup from "../components/AuthRequiredPopup";
+import { Helmet } from "react-helmet-async";
 
 function ListCard({ list, showLikeButton }) {
   const [isLiked, setIsLiked] = useState(list.is_liked);
@@ -171,6 +172,22 @@ function Lists() {
 
   return (
     <div className="lists-page">
+      <Helmet>
+        <title>Movie Lists - Flickture</title>
+        <meta
+          name="description"
+          content="Discover curated movie lists on Flickture. Browse popular collections, create your own lists, and share them with other movie enthusiasts."
+        />
+        <meta
+          name="keywords"
+          content="movie lists, movie collections, curated movies, movie recommendations, watchlists"
+        />
+        <meta property="og:title" content="Movie Lists - Flickture" />
+        <meta
+          property="og:description"
+          content="Discover curated movie lists on Flickture. Browse popular collections, create your own lists, and share them with other movie enthusiasts."
+        />
+      </Helmet>
       <div className="lists-page-header">
         <div className="lists-tabs-container">
           <div className="lists-tabs">

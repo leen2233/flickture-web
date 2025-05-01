@@ -19,6 +19,7 @@ import {
   BarChart2,
   Sparkles,
 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
@@ -316,6 +317,28 @@ function Home() {
   return (
     <div className="content-container">
       <div className="home-container">
+        <Helmet>
+          <title>Flickture - Track Movies & TV Shows</title>
+          <meta
+            name="description"
+            content="Flickture helps you discover, track, and share your favorite movies and TV shows. Create watchlists, rate what you've watched, and connect with other movie enthusiasts."
+          />
+          <meta
+            name="keywords"
+            content="movie tracker, TV shows, watchlist, movie ratings, movie reviews, movie community"
+          />
+          <meta
+            property="og:title"
+            content="Flickture - Track Movies & TV Shows"
+          />
+          <meta
+            property="og:description"
+            content="Discover, track, and share your favorite movies and TV shows. Join the Flickture community today!"
+          />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Flickture" />
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
         <div className="feed-header">
           <h1>Your Feed</h1>
           <div className="feed-tabs">

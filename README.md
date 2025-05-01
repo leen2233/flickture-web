@@ -2,6 +2,14 @@
 
 A modern, responsive web application for discovering, searching, and managing your favorite movies. Built with React and Vite, featuring a beautiful dark-themed UI and seamless user experience.
 
+## Links
+
+Live: https://flickture.leen2233.me
+
+Backend repo: https://github.com/leen2233/flickture
+
+Mobile repo: https://github.com/leen2233/flickture-mobile
+
 ## 🚀 Current Features
 
 ### Movie Discovery
@@ -14,6 +22,13 @@ A modern, responsive web application for discovering, searching, and managing yo
   - Genre information
   - Plot summaries
   - Movie posters
+
+### User Features
+
+- **Personalized Watchlist**: Save movies to watch later
+- **User Reviews**: Add personal ratings and reviews
+- **Custom Lists**: Create and share custom movie collections
+- **Social Features**: Follow other users and share recommendations
 
 ### User Experience
 
@@ -42,19 +57,6 @@ A modern, responsive web application for discovering, searching, and managing yo
 - **Code Quality**: ESLint with React plugins
 
 ## 🎯 Planned Features
-
-### User Features
-
-- **Personalized Watchlist**: Save movies to watch later
-- **User Reviews**: Add personal ratings and reviews
-- **Custom Lists**: Create and share custom movie collections
-- **Social Features**: Follow other users and share recommendations
-
-### Enhanced Search
-
-- **Advanced Filters**: Filter by year, genre, rating
-- **Similar Movies**: Find movies similar to your favorites
-- **Actor/Director Search**: Search by cast and crew
 
 ### UI Enhancements
 

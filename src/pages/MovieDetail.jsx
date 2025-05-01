@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../contexts/AuthContext";
 import AuthRequiredPopup from "../components/AuthRequiredPopup";
 import AddToListModal from "../components/AddToListModal";
+import { Helmet } from "react-helmet-async";
 
 function CollectionSection({ collection, collection_movies }) {
   const navigate = useNavigate();
@@ -400,6 +401,35 @@ function MovieDetail() {
 
   return (
     <div className="movie-detail-container">
+      <Helmet>
+        <title>
+          {movie.title} ({movie.year}) - Flickture
+        </title>
+        <meta
+          name="description"
+          content={
+            movie.plot ||
+            `Watch ${movie.title} on Flickture. ${
+              movie.type === "tv" ? "TV Series" : "Movie"
+            } released in ${movie.year}.`
+          }
+        />
+        <meta property="og:title" content={`${movie.title} (${movie.year})`} />
+        <meta property="og:description" content={movie.plot} />
+        <meta property="og:image" content={movie.poster_url} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${movie.title} (${movie.year})`} />
+        <meta name="twitter:description" content={movie.plot} />
+        <meta name="twitter:image" content={movie.poster_url} />
+        {movie.genres && (
+          <meta
+            name="keywords"
+            content={`${movie.genres.map((g) => g.name).join(", ")}, ${
+              movie.type === "tv" ? "TV Series" : "Movie"
+            }, Watch Online`}
+          />
+        )}
+      </Helmet>
       <div
         className="movie-backdrop"
         style={{ backgroundImage: `url(${movie.backdrop_url})` }}

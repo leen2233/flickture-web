@@ -12,6 +12,7 @@ import {
   Calendar,
   Tag,
 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import MovieList from "../components/MovieList";
 import axiosClient from "../utils/axios";
 import "../styles/Search.css";
@@ -238,6 +239,25 @@ function Search() {
   return (
     <div className="content-container">
       <div className="search-container">
+        <Helmet>
+          <title>Search Movies & TV Shows - Flickture</title>
+          <meta
+            name="description"
+            content="Search for your favorite movies and TV shows on Flickture. Discover new content, read reviews, and create your watchlist."
+          />
+          <meta
+            name="keywords"
+            content="movie search, tv series search, find movies, movie database, tv shows database"
+          />
+          <meta
+            property="og:title"
+            content="Search Movies & TV Shows - Flickture"
+          />
+          <meta
+            property="og:description"
+            content="Search for your favorite movies and TV shows on Flickture. Discover new content, read reviews, and create your watchlist."
+          />
+        </Helmet>
         <SearchInput
           value={query}
           onChange={handleInputChange}
