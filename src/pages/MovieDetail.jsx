@@ -402,9 +402,7 @@ function MovieDetail() {
   return (
     <div className="movie-detail-container">
       <Helmet>
-        <title>
-          {movie.title} ({movie.year}) - Flickture
-        </title>
+        <title>{`${movie.title} (${movie.year}) - Flickture`}</title>
         <meta
           name="description"
           content={
