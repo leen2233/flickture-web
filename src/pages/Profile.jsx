@@ -247,6 +247,7 @@ function Profile() {
           title="Movies Watched"
           type={showWatchedModal}
           onClose={() => setShowWatchedModal("")}
+          username={currentUser.username}
         />
       )}
 

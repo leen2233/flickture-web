@@ -14,7 +14,7 @@ import { formatTimeAgo } from "../utils/dateUtils";
 import axiosClient from "../utils/axios";
 import "../styles/MovieStatsModal.css";
 
-function MovieStatsModal({ title, type, onClose }) {
+function MovieStatsModal({ title, type, onClose, username }) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
@@ -46,7 +46,10 @@ function MovieStatsModal({ title, type, onClose }) {
         params.is_favorite = favoriteFilter === "favorite";
       }
 
-      const response = await axiosClient.get(`/auth/me/watchlist/`, { params });
+      const response = await axiosClient.get(
+        `/auth/user/${username}/watchlist/`,
+        { params }
+      );
 
       if (pageNum === 1) {
         setMovies(response.data.results);
