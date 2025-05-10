@@ -49,7 +49,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/feed" element={<Home />} />
         <Route path="/users/:username" element={<PublicProfile />} />
         <Route
           path="/profile"
@@ -75,7 +75,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route path="/search" element={<Search />} />
+        <Route path="/" element={<Search />} />
         <Route path="/:type/:tmdbId" element={<MovieDetail />} />
         <Route path="/:type/:movieId/comments" element={<Comments />} />
         <Route path="/:type/:tmdbId/episodes/" element={<SeasonDetails />} />

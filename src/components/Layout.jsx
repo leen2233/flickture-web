@@ -1,6 +1,14 @@
 import { Link, Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Home as HomeIcon, Search, List, User } from "lucide-react";
+import {
+  Home as HomeIcon,
+  Search,
+  List,
+  User,
+  LayoutList,
+  Rss,
+  Compass,
+} from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
 function NavItem({ to, icon: Icon, label }) {
@@ -24,8 +32,8 @@ function LeftSidebar() {
         <img src="/logo-landscape.png" className="landscape-logo" />
       </Link>
       <div className="nav-items">
-        <NavItem to="/" icon={HomeIcon} label="Home" />
-        <NavItem to="/search" icon={Search} label="Search" />
+        <NavItem to="/" icon={Compass} label="Discover" />
+        <NavItem to="/feed" icon={Rss} label="Feed" />
         <NavItem to="/lists" icon={List} label="Lists" />
         {isAuthenticated && (
           <NavItem to="/profile" icon={User} label="Profile" />
