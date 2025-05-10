@@ -5,13 +5,6 @@
   padding: 2rem;
 }
 
-/* Movie Lists Sections */
-.movie-lists-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
 .search-movie-section {
   display: flex;
   flex-direction: column;
@@ -289,7 +282,17 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .search-container {
+  .search-movie-card-horizontal {
+    flex: 0 0 100px;
+  }
+  .search-movie-section-header h2 {
+    font-size: 1.1rem;
+  }
+  .genre-pill {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+  /* .search-container {
     padding: 1rem;
   }
 
@@ -324,5 +327,5 @@
   .overview {
     font-size: 0.8125rem;
     -webkit-line-clamp: 2;
-  }
+  } */
 }
