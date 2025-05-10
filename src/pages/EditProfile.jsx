@@ -90,7 +90,7 @@ function EditProfile() {
           "Content-Type": "multipart/form-data",
         },
       });
-      
+
       navigate("/profile");
     } catch (error) {
       const errorData = error.response?.data || {};
@@ -130,7 +130,7 @@ function EditProfile() {
                 style={{
                   backgroundImage: preview.banner_image
                     ? `url(${preview.banner_image})`
-                    : "none",
+                    : "url(/default-banner.png)",
                   border: preview.banner_image
                     ? "none"
                     : "1px dashed var(--border-color)",

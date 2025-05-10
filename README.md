@@ -2,6 +2,22 @@
 
 A modern, responsive web application for discovering, searching, and managing your favorite movies. Built with React and Vite, featuring a beautiful dark-themed UI and seamless user experience.
 
+## ✨ Showcase
+
+Here's a glimpse of what Flickture looks like:
+
+### Discover Page
+
+![Discover Page](./showcase/Discover.png)
+
+### Movie Details
+
+![Movie Details](./showcase/MovieDetail.png)
+
+### User Profile
+
+![User Profile](./showcase/Profile.png)
+
 ## Links
 
 Live: https://flickture.leen2233.me
