@@ -2301,7 +2301,7 @@ input.error {
 }
 
 .edit-profile,
-.logout-button {
+.settings-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -2320,7 +2320,7 @@ input.error {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.logout-button {
+.settings-button {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -2330,7 +2330,7 @@ input.error {
   box-shadow: 0 4px 12px rgba(220, 63, 114, 0.3);
 }
 
-.logout-button:hover {
+.settings-button:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }

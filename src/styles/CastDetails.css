@@ -117,15 +117,6 @@
   }
 }
 
-.error-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  color: var(--text-error);
-  font-size: 1.1rem;
-}
-
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .page-header {

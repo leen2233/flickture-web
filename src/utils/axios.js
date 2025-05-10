@@ -93,44 +93,6 @@ axiosClient.interceptors.response.use(
       pendingRequests.delete(error.config.__requestKey);
     }
 
-    // Show error notification
-    let errorMessage = "An error occurred. Please try again.";
-    if (error.response) {
-      console.log(error.response.status);
-      if (error.response.status === 404) {
-        errorMessage = "Requested content couldn't found";
-      } else if (error.response.status === 500) {
-        errorMessage = "Internal Server Error";
-      } else if (error.response.data?.detail) {
-        errorMessage = error.response.data.detail;
-      } else if (error.response.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (typeof error.response.data === "string") {
-        errorMessage = error.response.data;
-      }
-    } else if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT") {
-      errorMessage = "Request timed out. Please try again.";
-    } else if (!error.response) {
-      errorMessage = "Network error. Please check your connection.";
-    }
-
-    toast.error(errorMessage, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark", // Assuming dark theme, adjust if needed
-      style: {
-        background: "#1a1a1a",
-        color: "#fff",
-        borderRadius: "8px",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      },
-    });
-
     const originalRequest = error.config;
 
     // If we shouldn't retry or we've run out of retries, reject the promise
