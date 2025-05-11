@@ -252,101 +252,6 @@ input.error {
   margin: 0;
 }
 
-@media (max-width: 768px) {
-  .login-box {
-    gap: 0.75rem;
-    padding: 1.25rem;
-    max-width: 360px;
-  }
-
-  .logo-container {
-    margin-bottom: 0.75rem;
-  }
-
-  .logo {
-    width: 120px;
-  }
-
-  input {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    border-radius: 8px;
-  }
-
-  .form-group {
-    gap: 0.25rem;
-  }
-
-  .show-password {
-    right: 0.875rem;
-    font-size: 0.75rem;
-  }
-
-  .error-message {
-    font-size: 0.75rem;
-    margin-left: 0.375rem;
-  }
-
-  .primary-button,
-  .google-button {
-    padding: 0.625rem;
-    font-size: 0.875rem;
-    border-radius: 8px;
-  }
-
-  .header-container {
-    margin-bottom: 0.75rem;
-  }
-
-  .title {
-    font-size: 1.75rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .subtitle {
-    font-size: 0.875rem;
-  }
-
-  .signup-prompt {
-    margin-top: 0.25rem;
-    font-size: 0.8125rem;
-  }
-
-  .google-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  /* Home page mobile adjustments */
-  .bottom-nav {
-    height: 56px;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .nav-item {
-    gap: 2px;
-    width: auto;
-    padding: 0.375rem;
-  }
-
-  .nav-item svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .nav-item span {
-    font-size: 0.6875rem;
-  }
-
-  .content {
-    padding: 0.75rem;
-  }
-
-  .content h1 {
-    font-size: 1.5rem;
-  }
-}
-
 @media (max-height: 700px) {
   .login-container {
     padding: 0.75rem;
@@ -605,43 +510,6 @@ input.error {
 .button-group .secondary-button:hover {
   background-color: var(--hover-color);
   border-color: var(--text-color);
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .edit-profile-header {
-    margin-bottom: 0.75rem;
-  }
-
-  .avatar-upload {
-    margin-left: 1rem;
-  }
-
-  .avatar-preview {
-    width: 90px;
-    height: 90px;
-  }
-
-  .form-fields {
-    padding: 0 1rem 1rem 1rem;
-  }
-
-  .banner-preview {
-    height: 160px;
-  }
-
-  .button-group {
-    flex-direction: column;
-  }
-
-  .button-group button {
-    height: 44px;
-  }
-
-  .form-group input,
-  .form-group textarea {
-    padding: 0.75rem;
-  }
 }
 
 /* Profile Page Styles */
@@ -926,33 +794,6 @@ input.error {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .movie-info-overlay {
-    padding: 0.75rem;
-    opacity: 1;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(0, 0, 0, 0.4) 70%,
-      transparent 100%
-    );
-  }
-
-  .movie-rating {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.4rem;
-  }
-
-  .movie-info-bottom .movie-title {
-    font-size: 0.875rem;
-  }
-
-  .movie-info-bottom .movie-year {
-    font-size: 0.75rem;
-  }
-}
-
 /* Layout Styles */
 .app-layout {
   display: flex;
@@ -1074,29 +915,6 @@ input.error {
   border-color: var(--text-color);
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .landscape-logo {
-    display: none;
-  }
-
-  .auth-buttons {
-    flex-direction: row;
-    padding: 0;
-    gap: 0.5rem;
-  }
-
-  .auth-button {
-    flex: 1;
-    padding: 0.625rem;
-    font-size: 0.875rem;
-  }
-
-  .footer-links {
-    display: none;
-  }
-}
-
 /* Main Content Area */
 .main-content {
   flex: 1;
@@ -1129,84 +947,6 @@ input.error {
   border-radius: 16px;
   border: 1px solid var(--border-color);
   overflow: hidden;
-}
-
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .app-layout {
-    flex-direction: column;
-    height: 100vh;
-  }
-
-  .left-sidebar {
-    width: 94%;
-    height: auto;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    padding: 0.75rem;
-    border-top: 1px solid var(--border-color);
-    border-right: none;
-    background: var(--background-secondary);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-  }
-
-  .nav-items {
-    flex-direction: row;
-    justify-content: space-around;
-    margin: 0;
-  }
-
-  .nav-item {
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.5rem;
-    font-size: 0.75rem;
-    width: 20%;
-  }
-
-  .sidebar-footer {
-    display: none;
-  }
-
-  .main-content {
-    height: calc(100vh - 70px);
-    padding-bottom: 70px;
-  }
-
-  .content-container,
-  .profile-container {
-    padding: 0;
-  }
-
-  .search-form {
-    padding: 0 20px;
-    margin-bottom: 10px;
-  }
-
-  .search-movie-section {
-    gap: 0.2rem;
-  }
-
-  .search-container {
-    padding: 2rem 0;
-  }
-
-  .search-button {
-    display: none;
-  }
-  .movie-lists-container {
-    gap: 0.8rem !important;
-  }
-
-  .content-card,
-  .profile-content,
-  .edit-profile-content {
-    border-radius: 12px;
-  }
 }
 
 /* Home Page Specific Styles */
@@ -1854,42 +1594,6 @@ input.error {
 
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
-  .cast-member,
-  .collection-movie {
-    flex: 0 0 80px;
-  }
-
-  .cast-image-container,
-  .collection-movie-poster {
-    width: 80px;
-    height: 120px;
-  }
-
-  .list-card {
-    flex: 0 0 120px;
-  }
-
-  .list-thumbnail {
-    width: 120px;
-    height: 80px;
-  }
-
-  .action-buttons {
-    gap: 0.75rem;
-  }
-
-  .action-button {
-    padding: 0.625rem;
-    font-size: 0.875rem;
-  }
-
-  .metadata-section {
-    padding: 0.75rem;
-  }
-
-  .metadata-item {
-    padding: 0.375rem;
-  }
 }
 
 /* Add these styles for the directors section */
@@ -2899,18 +2603,6 @@ input.error {
   padding: 1rem 0;
 }
 
-@media (max-width: 768px) {
-  .movies-scroll {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-  }
-
-  .loading-more {
-    padding: 1rem;
-    font-size: 0.875rem;
-  }
-}
-
 /* No more movies message styles */
 .no-more-movies {
   display: flex;
@@ -3126,5 +2818,320 @@ input.error {
 
   .known-for {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .movies-scroll {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .loading-more {
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .cast-member,
+  .collection-movie {
+    flex: 0 0 80px;
+  }
+
+  .cast-image-container,
+  .collection-movie-poster {
+    width: 80px;
+    height: 120px;
+  }
+
+  .list-card {
+    flex: 0 0 120px;
+  }
+
+  .list-thumbnail {
+    width: 120px;
+    height: 80px;
+  }
+
+  .action-buttons {
+    gap: 0.75rem;
+  }
+
+  .action-button {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+
+  .metadata-section {
+    padding: 0.75rem;
+  }
+
+  .metadata-item {
+    padding: 0.375rem;
+  }
+  .movie-detail-main {
+    padding: 10px;
+    gap: 1.5rem;
+  }
+
+  .movie-poster-large {
+    width: 140px;
+  }
+
+  .movie-info-detailed h1 {
+    font-size: 1.4rem;
+  }
+
+  .genre-tag {
+    font-size: 0.6rem;
+  }
+
+  .directors-section h3 {
+    font-size: 0.9rem;
+  }
+
+  .login-box {
+    gap: 0.75rem;
+    padding: 1.25rem;
+    max-width: 360px;
+  }
+
+  .logo-container {
+    margin-bottom: 0.75rem;
+  }
+
+  .logo {
+    width: 120px;
+  }
+
+  input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+  }
+
+  .form-group {
+    gap: 0.25rem;
+  }
+
+  .show-password {
+    right: 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .error-message {
+    font-size: 0.75rem;
+    margin-left: 0.375rem;
+  }
+
+  .primary-button,
+  .google-button {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+  }
+
+  .header-container {
+    margin-bottom: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .signup-prompt {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .google-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Home page mobile adjustments */
+  .bottom-nav {
+    height: 56px;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .nav-item {
+    gap: 2px;
+    width: auto;
+    padding: 0.375rem;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-item span {
+    font-size: 0.6875rem;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+
+  .content h1 {
+    font-size: 1.5rem;
+  }
+
+  .edit-profile-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .avatar-upload {
+    margin-left: 1rem;
+  }
+
+  .avatar-preview {
+    width: 90px;
+    height: 90px;
+  }
+
+  .form-fields {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .banner-preview {
+    height: 160px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    height: 44px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+  }
+
+  .movie-info-overlay {
+    padding: 0.75rem;
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.4) 70%,
+      transparent 100%
+    );
+  }
+
+  .movie-rating {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .movie-info-bottom .movie-title {
+    font-size: 0.875rem;
+  }
+
+  .movie-info-bottom .movie-year {
+    font-size: 0.75rem;
+  }
+
+  .landscape-logo {
+    display: none;
+  }
+
+  .auth-buttons {
+    flex-direction: row;
+    padding: 0;
+    gap: 0.5rem;
+  }
+
+  .auth-button {
+    flex: 1;
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+
+  .footer-links {
+    display: none;
+  }
+
+  .app-layout {
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .left-sidebar {
+    width: 94%;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    padding: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    border-right: none;
+    background: var(--background-secondary);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+  }
+
+  .nav-items {
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    width: 20%;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .main-content {
+    height: calc(100vh - 70px);
+    padding-bottom: 70px;
+  }
+
+  .content-container,
+  .profile-container {
+    padding: 0;
+  }
+
+  .search-form {
+    padding: 0 20px;
+    margin-bottom: 10px;
+  }
+
+  .search-movie-section {
+    gap: 0.2rem;
+  }
+
+  .search-container {
+    padding: 2rem 0;
+  }
+
+  .search-button {
+    display: none;
+  }
+  .movie-lists-container {
+    gap: 0.8rem !important;
+  }
+
+  .content-card,
+  .profile-content,
+  .edit-profile-content {
+    border-radius: 12px;
   }
 }
