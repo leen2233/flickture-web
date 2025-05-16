@@ -203,8 +203,6 @@ function ListDetail() {
     );
   }
 
-  const isCreator = currentUser && list.creator_id === currentUser.id;
-
   return (
     <div className="list-detail-page">
       <div className="list-detail-header">
@@ -217,7 +215,7 @@ function ListDetail() {
               <span>Back to Lists</span>
             </Link>
             <div className="nav-actions">
-              {isCreator && (
+              {list.is_creator && (
                 <>
                   <button className="nav-button primary" onClick={handleEdit}>
                     <Edit2 size={20} />

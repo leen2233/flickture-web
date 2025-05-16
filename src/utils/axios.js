@@ -1,7 +1,7 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 
-const API_BASE_URL = "http://192.168.16.153:8000/api/v1";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
 
 // Add this at the top of your file
 const pendingRequests = new Map();
