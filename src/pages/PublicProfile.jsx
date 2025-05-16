@@ -7,6 +7,7 @@ import {
   Clock,
   BookMarked,
   Users,
+  Lock,
 } from "lucide-react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import axiosClient from "../utils/axios";
@@ -28,6 +29,21 @@ function EmptyState({ icon: Icon, message }) {
     <div className="empty-state">
       <Icon size={24} />
       <p>{message}</p>
+    </div>
+  );
+}
+
+function PrivateProfileMessage() {
+  return (
+    <div className="private-profile">
+      <div className="private-profile-content">
+        <Lock size={64} className="private-profile-icon" />
+        <h2>This Profile is Private</h2>
+        <p>
+          You need to follow this user and be approved to view their profile
+          content.
+        </p>
+      </div>
     </div>
   );
 }
@@ -85,8 +101,10 @@ function MovieList({
     return (
       <div className="profile-movie-list-section">
         <div className="list-header">
-          <Icon size={20} className="icon" />
-          <h2>{title}</h2>
+          <div className="list-header-title">
+            <Icon size={20} className="icon" />
+            <h2>{title}</h2>
+          </div>
         </div>
         <EmptyState icon={Film} message={emptyMessage} />
       </div>
@@ -96,8 +114,10 @@ function MovieList({
   return (
     <div className="profile-movie-list-section">
       <div className="list-header">
-        <Icon size={20} className="icon" />
-        <h2>{title}</h2>
+        <div className="list-header-title">
+          <Icon size={20} className="icon" />
+          <h2>{title}</h2>
+        </div>
         {count > 5 && (
           <Link to={`/movies/${type}`} className="see-all">
             <span>See all {count}</span>
@@ -121,6 +141,7 @@ function PublicProfile() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [showWatchedModal, setShowWatchedModal] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
@@ -135,9 +156,13 @@ function PublicProfile() {
         setIsFollowing(response.data.is_following);
         setFollowerCount(response.data.follower_count);
       } catch (error) {
-        setError(
-          error.response?.data?.message || "Failed to load user profile"
-        );
+        if (error.response?.data?.detail === "This profile is private") {
+          setIsPrivate(true);
+        } else {
+          setError(
+            error.response?.data?.message || "Failed to load user profile"
+          );
+        }
       } finally {
         setIsLoading(false);
       }
@@ -177,10 +202,43 @@ function PublicProfile() {
     );
   }
 
-  if (!user) {
+  if (!user && !isPrivate) {
     return (
       <div className="profile-container">
         <div className="error-message general">User not found</div>
+      </div>
+    );
+  }
+
+  if (isPrivate) {
+    return (
+      <div className="profile-container">
+        <div className="profile-content">
+          <div className="profile-header">
+            <div className="profile-cover">
+              <img
+                src="/default-banner.png"
+                alt="Profile Banner"
+                className="banner-image"
+              />
+              <div className="profile-avatar-wrapper">
+                <img
+                  src="/default-avatar.png"
+                  alt="Profile"
+                  className="profile-avatar"
+                />
+              </div>
+            </div>
+
+            <div className="profile-info">
+              <div className="profile-text">
+                <h1>{username}</h1>
+                <span className="username">@{username}</span>
+              </div>
+            </div>
+          </div>
+          <PrivateProfileMessage />
+        </div>
       </div>
     );
   }
