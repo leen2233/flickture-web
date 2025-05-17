@@ -3207,4 +3207,34 @@ input.error {
     margin-top: 10px;
     margin-bottom: 2px !important;
   }
+
+  .movie-info-detailed h2 {
+    margin: 0;
+  }
+
+  .seasons-container {
+    margin: 0 !important;
+  }
+
+  .seasons-container .season {
+    font-size: 0.6rem;
+  }
+
+  .episodes-container {
+    margin-bottom: 20px !important;
+  }
+
+  .episodes-table,
+  .episodes-table thead tr th {
+    font-size: 0.6rem;
+  }
+
+  .episodes-table thead tr th {
+    padding: 10px;
+    font-size: 0.5rem;
+  }
+
+  .episodes-table tbody tr td {
+    padding: 10px;
+  }
 }

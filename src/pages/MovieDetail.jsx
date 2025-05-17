@@ -337,7 +337,7 @@ function MovieDetail() {
 
   const handleBack = () => {
     if (location.state?.from === "search" && location.state?.search) {
-      navigate(`/search${location.state.search}`);
+      navigate(`/${location.state.search}`);
     } else if (location.state?.from === "profile") {
       navigate("/profile");
     } else {

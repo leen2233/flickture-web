@@ -128,7 +128,7 @@ function CollectionDetail() {
           )}
           <div className="backdrop-overlay" />
           <div className="movie-nav">
-            <Link to="/search" className="nav-button">
+            <Link to="/" className="nav-button">
               <ArrowLeft size={20} />
               <span>Back</span>
             </Link>
