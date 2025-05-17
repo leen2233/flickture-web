@@ -704,12 +704,19 @@
   }
 
   .home-container .movie-mini-info h3 {
-    font-size: 0.9375rem;
+    font-size: 0.7rem;
   }
 
   .home-container .movie-meta-info {
-    font-size: 0.8125rem;
+    font-size: 0.6rem;
     gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .home-container .movie-meta-info .movie-year,
+  .home-container .movie-meta-info .movie-runtime {
+    font-size: 0.6rem;
   }
 
   .home-container .genre-tag {
@@ -718,7 +725,7 @@
   }
 
   .home-container .movie-rating-badge {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.6875rem;
+    padding: 0.1rem 0.2rem;
+    font-size: 0.5rem;
   }
 }

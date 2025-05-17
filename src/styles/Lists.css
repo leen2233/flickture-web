@@ -1630,12 +1630,6 @@
     padding: 0 16px;
   }
 
-  .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
   .genre-movie-item .movie-info h3 {
     font-size: 13px;
   }

@@ -8,14 +8,17 @@ import {
   LayoutList,
   Rss,
   Compass,
+  LogIn,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
-function NavItem({ to, icon: Icon, label }) {
+function NavItem({ to, icon: Icon, label, className }) {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+      className={({ isActive }) =>
+        `nav-item ${isActive ? "active" : ""} ${className}`
+      }
     >
       <Icon size={24} />
       <span>{label}</span>
@@ -35,8 +38,15 @@ function LeftSidebar() {
         <NavItem to="/" icon={Compass} label="Discover" />
         <NavItem to="/feed" icon={Rss} label="Feed" />
         <NavItem to="/lists" icon={List} label="Lists" />
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <NavItem to="/profile" icon={User} label="Profile" />
+        ) : (
+          <NavItem
+            to="/login"
+            icon={LogIn}
+            label="Login"
+            className="mobile-login"
+          />
         )}
       </div>
       <div className="sidebar-footer">
