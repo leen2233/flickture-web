@@ -51,7 +51,7 @@ function CollectionSection({ collection, collection_movies }) {
             key={movie.tmdb_id}
             className="movie-grid-item collection-movie-item"
             onClick={() =>
-              navigate(`/${movie.type}}/${movie.tmdb_id}`, {
+              navigate(`/${movie.type}/${movie.tmdb_id}`, {
                 state: { from: "search" },
               })
             }
