@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../utils/axios";
 import { useAuth } from "../contexts/AuthContext";
+import { RefreshCwIcon } from "lucide-react";
 
 function Register() {
   const navigate = useNavigate();
@@ -13,7 +14,39 @@ function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [username, setUsername] = useState("");
+  const [captchaKey, setCaptchaKey] = useState("");
+  const [captchaImage, setCaptchaImage] = useState("");
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaLoading, setCaptchaLoading] = useState(false);
   const { checkAuth } = useAuth();
+
+  // Load CAPTCHA when component mounts
+  useEffect(() => {
+    loadCaptcha();
+  }, []);
+
+  const loadCaptcha = async () => {
+    setCaptchaLoading(true);
+    try {
+      const response = await axiosClient.get("/auth/captcha");
+      const { captcha_key, captcha_image } = response.data;
+      setCaptchaKey(captcha_key);
+      setCaptchaImage(captcha_image);
+      setCaptchaInput("");
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.captcha_input;
+        delete newErrors.captcha_key;
+        delete newErrors.error;
+        return newErrors;
+      });
+    } catch (error) {
+      console.error("Failed to load CAPTCHA:", error);
+      setErrors((prev) => ({ ...prev, error: "Failed to load CAPTCHA" }));
+    } finally {
+      setCaptchaLoading(false);
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -40,6 +73,14 @@ function Register() {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
+    if (!captchaInput) {
+      newErrors.captcha_input = "Please enter the CAPTCHA";
+    }
+
+    if (!captchaKey) {
+      newErrors.captcha_key = "CAPTCHA key is missing";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -56,6 +97,8 @@ function Register() {
         email,
         password,
         full_name: username,
+        captcha_input: captchaInput,
+        captcha_key: captchaKey,
       });
 
       const { token } = response.data;
@@ -73,10 +116,19 @@ function Register() {
 
       // Handle field-specific errors
       Object.keys(errorData).forEach((key) => {
-        newErrors[key] = errorData[key][0];
+        if (Array.isArray(errorData[key])) {
+          newErrors[key] = errorData[key][0];
+        } else {
+          newErrors[key] = errorData[key];
+        }
       });
 
       setErrors(newErrors);
+
+      // If CAPTCHA is wrong or there's an error, reload CAPTCHA
+      if (newErrors.error || newErrors.captcha_input || newErrors.captcha_key) {
+        loadCaptcha();
+      }
     } finally {
       setIsLoading(false);
     }
@@ -185,10 +237,65 @@ function Register() {
           )}
         </div>
 
+        <div className="form-group">
+          <div className="captcha-container">
+            <div className="captcha-image-container">
+              <input
+                type="text"
+                value={captchaInput}
+                onChange={(e) => {
+                  setCaptchaInput(e.target.value);
+                  if (errors.captcha_input || errors.error) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.captcha_input;
+                      delete newErrors.error;
+                      return newErrors;
+                    });
+                  }
+                }}
+                placeholder="Enter CAPTCHA"
+                className={errors.captcha_input || errors.error ? "error" : ""}
+              />
+              {captchaLoading ? (
+                <div className="captcha-loading">Loading CAPTCHA...</div>
+              ) : captchaImage ? (
+                <img
+                  src={captchaImage}
+                  alt="CAPTCHA"
+                  className="captcha-image"
+                />
+              ) : (
+                <div className="captcha-error">Failed to load CAPTCHA</div>
+              )}
+              <button
+                type="button"
+                className="captcha-refresh"
+                onClick={loadCaptcha}
+                disabled={captchaLoading}
+                title="Refresh CAPTCHA"
+              >
+                <RefreshCwIcon />
+              </button>
+            </div>
+          </div>
+          {errors.captcha_input && (
+            <span className="register-error-message">
+              {errors.captcha_input}
+            </span>
+          )}
+          {errors.captcha_key && (
+            <span className="register-error-message">{errors.captcha_key}</span>
+          )}
+          {errors.error && (
+            <span className="register-error-message">{errors.error}</span>
+          )}
+        </div>
+
         <button
           className="primary-button"
           onClick={handleRegister}
-          disabled={isLoading}
+          disabled={isLoading || captchaLoading}
         >
           {isLoading ? "Signing up..." : "Sign Up"}
         </button>
